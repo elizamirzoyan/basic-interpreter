@@ -4,11 +4,9 @@
 #include<cstring>
 
 
-
-
 std::string toxi_skizb(std::string str)
 {
-int index,jindex;
+   int index,jindex;
               int skizb_index=0;
             if(skizb_index != std::string::npos)
               {
@@ -21,15 +19,15 @@ int index,jindex;
               }
           std::string skzbi_mas=str.substr(index,jindex-index);
             return skzbi_mas;
-
 }
-
 
 bool sentence_end(std::string str)
 {
     if(str.find(";") != std::string::npos)
-	    return true;
-    else return false;
+      {
+	return true;
+      }
+	return false;
 }
 
 std::string arjeqi_pokum(std::string str)
@@ -47,8 +45,8 @@ std::string arjeqi_pokum(std::string str)
 	      }
        std::string arjeq=str.substr(index+3,jindex-(index+3));
 	    return arjeq;
-
 }
+
 std::string tesakner(std::string str)
 {
 	std::string tesak;
@@ -59,7 +57,6 @@ std::string tesakner(std::string str)
 	     {
 	       tesak="int";
 	     }
-
 		     else
 		     {
 	 if(isdigit(arjeq[i])&&(arjeq.find(".")!=std::string::npos))//sizeof-i pahy amenayn havanakanutyamb sxal a
@@ -74,11 +71,7 @@ std::string tesakner(std::string str)
 	                     }}
                                 	     }
            return tesak;
-	
 }
-
-
-
 
 std::string anuni_payman(std::string str)
 {
@@ -101,27 +94,18 @@ std::string anuni_payman(std::string str)
 	return anun;
 }
 
-
-
-
-
 int stringic_integer(std::string str)
-
 {
    int tiv=0;
 	   for(int i=0;i<str.length();++i)
 	   {
 		   tiv=tiv*10+(int(str[i])-48);
-
 	   }
 return tiv;
 }
 
-
-
 std::string sum_int1 (std::string str)
-{
-       
+{       
         int index,jindex;
       std::size_t havasar_index=str.find(":= ");
             if(havasar_index != -1)
@@ -134,15 +118,8 @@ std::string sum_int1 (std::string str)
                 jindex=nshan_index;
               }
      std::string arjeq=str.substr(index+3,jindex-(index+3));
-  
-
-
    return arjeq;
-
-
 }
-
-
 
 std::string sum_int2 (std::string str)
 {
@@ -159,11 +136,7 @@ std::string sum_int2 (std::string str)
               }
        std::string arjeq=str.substr(index+2,jindex-(index+2));
             return arjeq;
-
-
 }
-
-
 
 std::string baj_int1 (std::string str)
 {
@@ -180,11 +153,7 @@ std::string baj_int1 (std::string str)
               }
      std::string arjeq=str.substr(index+3,jindex-(index+3));
             return arjeq;
-
-
 }
-
-
 
 std::string baj_int2 (std::string str)
 {
@@ -201,11 +170,7 @@ std::string baj_int2 (std::string str)
               }
       std::string arjeq=str.substr(index+2,jindex-(index+2));
             return arjeq;
-
-
 }
-
-
 
 std::string baz_int1 (std::string str)
 {
@@ -221,14 +186,8 @@ std::string baz_int1 (std::string str)
                  jindex=nshan_index;
               }
        std::string arjeq=str.substr(index+3,jindex-(index+3));
-
-
             return arjeq;
-
-
 }
-
-
 
 std::string baz_int2 (std::string str)
 {
@@ -244,15 +203,8 @@ std::string baz_int2 (std::string str)
                 jindex=ketstor_index;
               }
         std::string arjeq=str.substr(index+2,jindex-(index+2));
-
-
             return arjeq;
-
-
 }
-
-
-
 
 std::string han_int1 (std::string str)
 {
@@ -268,14 +220,8 @@ std::string han_int1 (std::string str)
                 jindex=nshan_index;
               }
       std::string arjeq=str.substr(index+3,jindex-(index+3));
-
-
             return arjeq;
-
-
 }
-
-
 
 std::string han_int2 (std::string str)
 {
@@ -291,15 +237,8 @@ std::string han_int2 (std::string str)
                  jindex=ketstor_index;
               }
       std::string arjeq=str.substr(index+2,jindex-(index+2));
-
-
             return arjeq;
-
-
 }
-
-
-
 
 std::string mn_baj_int1 (std::string str)
 {
@@ -315,16 +254,8 @@ std::string mn_baj_int1 (std::string str)
                  jindex=nshan_index;
               }  
       std::string arjeq=str.substr(index+3,jindex-(index+3));
-
-
             return arjeq;
-
-
 }
-
-
-
-
 
 std::string mn_baj_int2 (std::string str)
 {
@@ -340,16 +271,8 @@ std::string mn_baj_int2 (std::string str)
                   jindex=ketstor_index;
               }
        std::string arjeq=str.substr(index+2,jindex-(index+2));
-
-
             return arjeq;
-
-
 }
-
-
-
-
 
 bool is_integer(std::string a)
 {
@@ -360,10 +283,6 @@ bool is_integer(std::string a)
 	return true;
 }
 
-
-
-
-
 void gumarum(std::string str)
 {
  std::string a=arjeqi_pokum(str);
@@ -371,88 +290,60 @@ void gumarum(std::string str)
  {
 	if(tesakner(sum_int1(str))=="int" && tesakner(sum_int2(str))=="int")
 			 {
-
 			 std::cout<< std::stoi(sum_int1(str))+std::stoi(sum_int2(str))<<std::endl;
 			 }
-	else {
-	
+	else {	
 	  if(tesakner(sum_int1(str))=="double" && tesakner(sum_int2(str))=="double")
                          {
-
                          std::cout<< std::stod(sum_int1(str))+std::stod(sum_int2(str))<<std::endl;
                          }
 	  else{
-
 	    if(tesakner(sum_int1(str))=="double" && tesakner(sum_int2(str))=="int")
                          {
-
                          std::cout<< std::stod(sum_int1(str))+std::stoi(sum_int2(str))<<std::endl;
                          }
 	    else{
 	          if(tesakner(sum_int1(str))=="int" && tesakner(sum_int2(str))=="double")
                          {
-
                           std::cout<< std::stoi(sum_int1(str))+std::stod(sum_int2(str))<<std::endl;
                          }
 		  else std::cout<<"this interpreter isn't smart enough to sum char";
-
 	    }
-
 	  }
-
 	}
      }
 }
 
-
-
-
 void bajanum(std::string str)
 {
-
 std::string a=arjeqi_pokum(str);
  if(a.find("/")!= std::string::npos)
  {
         if(tesakner(baj_int1(str))=="int" && tesakner(baj_int2(str))=="int")
                          {
-
-                         std::cout<< std::stoi(baj_int1(str)) / std::stoi(baj_int2(str))<<std::endl;
+                        std::cout<< std::stoi(baj_int1(str)) / std::stoi(baj_int2(str))<<std::endl;
                          }
         else {
-
           if(tesakner(baj_int1(str))=="double" && tesakner(baj_int2(str))=="double")
                          {
-
                          std::cout<< std::stod(baj_int1(str)) / std::stod(baj_int2(str))<<std::endl;
                          }
           else{
-
             if(tesakner(baj_int1(str))=="double" && tesakner(baj_int2(str))=="int")
                          {
-
                          std::cout<< std::stod(baj_int1(str)) / std::stoi(baj_int2(str))<<std::endl;
                          }
             else{
-
                   if(tesakner(baj_int1(str))=="int" && tesakner(baj_int2(str))=="double")
                          {
-
                          std::cout<< std::stoi(baj_int1(str)) / std::stod(baj_int2(str))<<std::endl;
                          }
                   else std::cout<<"this interpreter isn't smart enough to bajanel  char";
-
             }
-
           }
-
         }
-
-
  }
 }
-
-
-
 
 void bazmapatkum(std::string str)
 {
@@ -461,43 +352,29 @@ std::string a=arjeqi_pokum(str);
  {
           if(tesakner(baz_int1(str))=="int" && tesakner(baz_int2(str))=="int")
                          {
-
                          std::cout<< std::stoi(baz_int1(str))*std::stoi(baz_int2(str))<<std::endl;
                          }
         else {
-
           if(tesakner(baz_int1(str))=="double" && tesakner(baz_int2(str))=="double")
                          {
-
                          std::cout<< std::stod(baz_int1(str))*std::stod(baz_int2(str))<<std::endl;
                          }
           else{
             if(tesakner(baz_int1(str))=="double" && tesakner(baz_int2(str))=="int")
                          {
-
                          std::cout<< std::stod(baz_int1(str))*std::stoi(baz_int2(str))<<std::endl;
                          }
             else{
                   if(tesakner(baz_int1(str))=="int" && tesakner(baz_int2(str))=="double")
                          {
-
                          std::cout<< std::stoi(baz_int1(str))*std::stod(baz_int2(str))<<std::endl;
                          }
                   else std::cout<<"this interpreter isn't smart enough to multiply  char";
-
             }
-
           }
-
     	}
-    
      }
-
   }
-
-
-
-
 
 void hanum(std::string str)
 {
@@ -506,85 +383,60 @@ std::string a=arjeqi_pokum(str);
  {
     if(tesakner(han_int1(str))=="int" && tesakner(han_int2(str))=="int")
                          {
-
                          std::cout<< std::stoi(han_int1(str)) - std::stoi(han_int2(str))<<std::endl;
                          }
         else {
-
           if(tesakner(han_int1(str))=="double" && tesakner(han_int2(str))=="double")
                          {
-
                          std::cout<< std::stod(han_int1(str)) - std::stod(han_int2(str))<<std::endl;
                          }
           else{
             if(tesakner(han_int1(str))=="double" && tesakner(han_int2(str))=="int")
                          {
-
-                         std::cout<< std::stod(han_int1(str)) - std::stoi(han_int2(str))<<std::endl;
+                          std::cout<< std::stod(han_int1(str)) - std::stoi(han_int2(str))<<std::endl;
                          }
             else{
                   if(tesakner(han_int1(str))=="int" && tesakner(han_int2(str))=="double")
                          {
-
                          std::cout<< std::stoi(han_int1(str)) - std::stod(han_int2(str))<<std::endl;
                          }
                   else std::cout<<"this interpreter isn't smart enough to hanel char";
-
             }
-
           }
-
        }
-
     }
-
  }
-
-
-
-
 
 void mnac_baj(std::string str)
 {
-
 std::string a=arjeqi_pokum(str);
 if(a.find("%")!= std::string::npos)
 {
 if(tesakner(mn_baj_int1(str))=="int" && tesakner(mn_baj_int2(str))=="int")
                          {
-
                          std::cout<< std::stoi(mn_baj_int1(str)) % std::stoi(mn_baj_int2(str))<<std::endl;
                          }
         else {
-
           if(tesakner(mn_baj_int1(str))=="double" && tesakner(mn_baj_int2(str))=="double")
                          {
-
                          std::cout<< "Error:you can't devide double numbers"<<std::endl;
                          }
           else{
             if(tesakner(mn_baj_int1(str))=="double" && tesakner(mn_baj_int2(str))=="int")
                          {
-
                          std::cout<< "Error:You cant devide double numbers"<<std::endl;
                          }
             else{
                   if(tesakner(mn_baj_int1(str))=="int" && tesakner(mn_baj_int2(str))=="double")
                          {
-
                          std::cout<< "Error:you cant devide double numbers"<<std::endl;
                          }
                   else std::cout<<"Error:this interpreter isn't smart enough to mnacordov devide anel char";
-
             }
           }
  }
 }
 }
-
-
-
-
 
 void arithmetic(std::string str)
 {
@@ -610,10 +462,6 @@ void arithmetic(std::string str)
       }
 }
 
-
-
-
-
 bool is_condition_right(std::string str)
 {
             if(str.find("( ")!= -1 && str.find(" )")!=-1)
@@ -624,10 +472,6 @@ bool is_condition_right(std::string str)
 
 }
 
-
-
-
-
 std::string translate(std::string str)
 {
     std::string bar;
@@ -635,7 +479,6 @@ std::string translate(std::string str)
     {
 	    if(sentence_end(str)==false && is_condition_right(str)==true)
 		     bar="if";
-
     }
     if(toxi_skizb(str)=="ptutik")
     {
@@ -647,29 +490,18 @@ std::string translate(std::string str)
 	    if(sentence_end(str)==false && is_condition_right(str)==true)
                      bar="while";
     }
-
     return bar;
-
 }
-
-
-
 
 bool translate_payman(std::string str)
 {
 if(str.find("ete")!=std::string::npos || str.find("ptutak")!=std::string::npos || str.find("ptutik")!=std::string::npos)
   {
      if(str.find("(") !=std::string::npos && str.find(")")!=std::string::npos )
-         return true;
-       
+         return true;       
   }
-  
 return false;
-
-
 }
-
-
 
 std::string inside_condition(std::string str)
 {
@@ -685,21 +517,14 @@ std::string inside_condition(std::string str)
                  jindex=bracket2_index;
               }
          std::string arjeq=str.substr(index+2,jindex-(index+2));
-
-
             return arjeq;
-
 }
 
-	
-
 bool  cmp_operand_eq(std::string str)
-
 {
   std::string a=inside_condition(str);
   if(a.find("==")!= std::string::npos)
   {           int index, jindex;
-   
 	std::size_t bracket_index=str.find("( ");
         if(bracket_index != -1)
             {
@@ -711,7 +536,6 @@ bool  cmp_operand_eq(std::string str)
                jindex=havasar_index;
             }
         std::string arjeq=str.substr(index+2,jindex-(index+2));
-          
            int index1, jindex1;
 	std::size_t havasar_index1=str.find("== ");
         if(havasar_index1 != -1)
@@ -724,44 +548,27 @@ bool  cmp_operand_eq(std::string str)
                  jindex1=bracket_index1;
               }
        std::string arjeq1=str.substr(index1+3,jindex1-(index1+3));
-  
-
 	    if(tesakner(arjeq)=="int" && tesakner(arjeq1)=="int")
                          {
-
                           if(std::stoi(arjeq)==std::stoi(arjeq1)) return true;
                          }
-   
-
           if(tesakner(arjeq)=="double" && tesakner(arjeq1)=="double")
                          {
                             if(std::stod(arjeq)==std::stod(arjeq1)) return true;
-                      
-                      
                          }
             if(tesakner(arjeq)=="double" && tesakner(arjeq1)=="int")
                          {
                             if(std::stod(arjeq)==std::stoi(arjeq1)) return true;
-                             
                          }
                   if(tesakner(arjeq)=="int" && tesakner(arjeq1)=="double")
                          {
                             if(std::stoi(arjeq)==std::stod(arjeq1)) return true;
-                            
-             
                          }
-
-
   }
-
   return false;
 }
 
-
-
-
 bool  cmp_operand_mets(std::string str)
-
 {
   std::string a=inside_condition(str);
   if(a.find(">")!= std::string::npos)
@@ -778,7 +585,6 @@ bool  cmp_operand_mets(std::string str)
              jindex=nshan_index;
            }
         std::string arjeq=str.substr(index+2,jindex-(index+2));
-
            int index1, jindex1;
 	std::size_t nshan_index1=str.find("> ");
         if(nshan_index1 != std::string::npos)
@@ -793,39 +599,25 @@ bool  cmp_operand_mets(std::string str)
         std::string arjeq1=str.substr(index1+2,jindex1-(index1+2));
 	     if(tesakner(arjeq)=="int" && tesakner(arjeq1)=="int")
                          {
-
                           if(std::stoi(arjeq)>std::stoi(arjeq1)) return true;
-             
                          }
-
-
           if(tesakner(arjeq)=="double" && tesakner(arjeq1)=="double")
                          {
                             if(std::stod(arjeq)>std::stod(arjeq1)) return true;
-                              
-
                          }
             if(tesakner(arjeq)=="double" && tesakner(arjeq1)=="int")
                          {
                             if(std::stod(arjeq)>std::stoi(arjeq1)) return true;
-                             
                          }
                   if(tesakner(arjeq)=="int" && tesakner(arjeq1)=="double")
                          {
                             if(std::stoi(arjeq)>std::stod(arjeq1)) return true;
- 
-
                          }
   }
-
    return false;
 }
 
-
-
-
 bool  cmp_operand_mets_havasar(std::string str)
-
 {
   std::string a=inside_condition(str);
   if(a.find(">=")!= std::string::npos)
@@ -842,7 +634,6 @@ bool  cmp_operand_mets_havasar(std::string str)
                  jindex=nshan_index;
               }
        std::string arjeq=str.substr(index+2,jindex-(index+2));
-
            int index1, jindex1;
 	std::size_t nshan_index1=str.find(">= ");
         if(nshan_index1 != std::string::npos)
@@ -855,21 +646,15 @@ bool  cmp_operand_mets_havasar(std::string str)
               jindex1=bracket_index1;
            }
       std::string arjeq1=str.substr(index1+3,jindex1-(index1+3));
-
-
 	     if(tesakner(arjeq)=="int" && tesakner(arjeq1)=="int")
                          {
-
                           if(std::stoi(arjeq)>=std::stoi(arjeq1)) return true;
                               else return false;
                          }
-
-
           if(tesakner(arjeq)=="double" && tesakner(arjeq1)=="double")
                          {
                             if(std::stod(arjeq)>=std::stod(arjeq1)) return true;
                               else return false;
-
                          }
             if(tesakner(arjeq)=="double" && tesakner(arjeq1)=="int")
                          {
@@ -880,21 +665,12 @@ bool  cmp_operand_mets_havasar(std::string str)
                          {
                             if(std::stoi(arjeq)>=std::stod(arjeq1)) return true;
                               else return false;
-
                          }
   }
-
-
    return false;
-
 }
 
-
-
-
-
 bool  cmp_operand_poqr(std::string str)
-
 {
   std::string a=inside_condition(str);
   if(a.find("<")!= std::string::npos)
@@ -911,7 +687,6 @@ bool  cmp_operand_poqr(std::string str)
                jindex=nshan_index;
            }
        std::string arjeq=str.substr(index+2,jindex-(index+2));
-
            int index1, jindex1;
 	std::size_t nshan_index1=str.find("< ");
         if(nshan_index1 != -1)
@@ -924,45 +699,27 @@ bool  cmp_operand_poqr(std::string str)
               jindex1=bracket_index1;
            }
          std::string arjeq1=str.substr(index1+2,jindex1-(index1+2));
-
-
     if(tesakner(arjeq)=="int" && tesakner(arjeq1)=="int")
                          {
-
-                          if(std::stoi(arjeq)<std::stoi(arjeq1)) return true;
-                              
+                          if(std::stoi(arjeq)<std::stoi(arjeq1)) return true;    
                          }
-
-
           if(tesakner(arjeq)=="double" && tesakner(arjeq1)=="double")
                          {
                             if(std::stod(arjeq)<std::stod(arjeq1)) return true;
-                             
-
                          }
             if(tesakner(arjeq)=="double" && tesakner(arjeq1)=="int")
                          {
                             if(std::stod(arjeq)<std::stoi(arjeq1)) return true;
-                          
                          }
                   if(tesakner(arjeq)=="int" && tesakner(arjeq1)=="double")
                          {
                             if(std::stoi(arjeq)<std::stod(arjeq1)) return true;
-                 
-
                          }
   }
-
-
       return  false;
 }
 
-
-
-
-
 bool  cmp_operand_poqr_havasar(std::string str)
-
 {
   std::string a=inside_condition(str);
   if(a.find("<=")!= std::string::npos)
@@ -979,7 +736,6 @@ bool  cmp_operand_poqr_havasar(std::string str)
               jindex=nshan_index;
           }
            std::string arjeq=str.substr(index+2,jindex-(index+2));
-
            int index1, jindex1;
 	std::size_t nshan_index1=str.find("<= ");
         if(nshan_index1 != -1)
@@ -992,43 +748,27 @@ bool  cmp_operand_poqr_havasar(std::string str)
                     jindex1=bracket_index1;
             }
    std::string arjeq1=str.substr(index1+3,jindex1-(index1+3));
-
  if(tesakner(arjeq)=="int" && tesakner(arjeq1)=="int")
                          {
-
                           if(std::stoi(arjeq)<=std::stoi(arjeq1)) return true;
-                          
                          }
-
-
           if(tesakner(arjeq)=="double" && tesakner(arjeq1)=="double")
                          {
                             if(std::stod(arjeq)<=std::stod(arjeq1)) return true;
-                             
-
                          }
             if(tesakner(arjeq)=="double" && tesakner(arjeq1)=="int")
                          {
                             if(std::stod(arjeq)<=std::stoi(arjeq1)) return true;
-                              
                          }
                   if(tesakner(arjeq)=="int" && tesakner(arjeq1)=="double")
                          {
                             if(std::stoi(arjeq)<=std::stod(arjeq1)) return true;
-
                          }
   }
-
-
-
    return false;
 }
 
-
-
-
 bool  cmp_operand_havasar_chi(std::string str)
-
 {
   std::string a=inside_condition(str);
   if(a.find("!=")!= std::string::npos)
@@ -1045,7 +785,6 @@ bool  cmp_operand_havasar_chi(std::string str)
               jindex=nshan_index; 
           }
         std::string arjeq=str.substr(index+2,jindex-(index+2));
-
            int index1, jindex1;
 	std::size_t nshan_index1=str.find("!= ");
         if(nshan_index1 != -1)
@@ -1058,42 +797,24 @@ bool  cmp_operand_havasar_chi(std::string str)
              jindex1=bracket_index1;
            }
         std::string arjeq1=str.substr(index1+3,jindex1-(index1+3));
-
-
 if(tesakner(arjeq)=="int" && tesakner(arjeq1)=="int")
-                         {
-
                           if(std::stoi(arjeq)!=std::stoi(arjeq1)) return true;
-                           
                          }
-
-
           if(tesakner(arjeq)=="double" && tesakner(arjeq1)=="double")
                          {
                             if(std::stod(arjeq)!=std::stod(arjeq1)) return true;
-                             
-
                          }
             if(tesakner(arjeq)=="double" && tesakner(arjeq1)=="int")
                          {
                             if(std::stod(arjeq)!=std::stoi(arjeq1)) return true;
-                              
                          }
                   if(tesakner(arjeq)=="int" && tesakner(arjeq1)=="double")
                          {
                             if(std::stoi(arjeq)!=std::stod(arjeq1)) return true;
-                             
-
                          }
-
 }
-
-
  return false;
 }
-
-
-
 
 bool brackets_condition(std::string str)
 {
@@ -1106,9 +827,6 @@ bool brackets_condition(std::string str)
    }
 return false;
 }
-
-
-
 
 std::string inside_dzev(std::string str)
 {
@@ -1125,30 +843,15 @@ std::string inside_dzev(std::string str)
            }
        std::string arjeq=str.substr(index+2,jindex-(index+2));
       return arjeq;
-
 }
-
-
-
-
-
-
 
 void hamematel(std::string str)
 {
  if(cmp_operand_havasar_chi(str)==true ||cmp_operand_eq(str)==true ||cmp_operand_mets(str)==true ||cmp_operand_mets_havasar(str)==true||cmp_operand_poqr(str)==true ||cmp_operand_poqr_havasar(str)==true)
    {
      std::cout<<inside_dzev(str);
-   }
- 
+   } 
 }
-
-
-
-
-
-
-
 
 int main()
 {
@@ -1159,7 +862,6 @@ int main()
        std::cout<<"Your file has faild to open";
 
    }
-
         std::string wstring = "";
 	if(!this_file.eof())
 	{
@@ -1178,25 +880,19 @@ int main()
  std::cout<<"Error: you forgot to put a name for your variable";
 	exit(0);
 }*/
-
 if(tesakner(wstring)=="int");
 {
     std::cout<<tesakner(wstring)<<" "<<anuni_payman(wstring)<<" ="<<" "<<stringic_integer(arjeqi_pokum(wstring))<<" ;"<<std::endl;
 }
-
 if(tesakner(wstring)=="double");
 {
     std::cout<<tesakner(wstring)<<" "<<anuni_payman(wstring)<<" ="<<" "<<stod(arjeqi_pokum(wstring))<<" ;"<<std::endl;
 }	
-
 if(tesakner(wstring)=="char");
 {
    std::cout<<tesakner(wstring)<<" "<<anuni_payman(wstring)<<" ="<<" "<<arjeqi_pokum(wstring)<<" ;"<<std::endl;
 }
-
 arithmetic (wstring);
-
-
 if(toxi_skizb(wstring)=="ete" && translate_payman(wstring)==true)
 {
     if(brackets_condition(wstring)!=true)
@@ -1204,9 +900,7 @@ if(toxi_skizb(wstring)=="ete" && translate_payman(wstring)==true)
         std::cout<<"Error:You forgot to put brackets";
      }
     hamematel(wstring);
- 
 } 
    return 0;
-
 }
 
