@@ -1,0 +1,131 @@
+#include <iostream>
+#include <string>
+#include <vector>
+
+
+class BankingOperation {
+public:
+    virtual void deposit(double amount) = 0;
+    virtual void withdraw(double amount) = 0;
+    virtual void transfer(Account& target, double amount) = 0;
+};
+
+
+class Account : public BankingOperation {
+public:
+    Account(double balance, std::string account_number, std::string account_type)
+        : balance(balance), account_number(account_number), account_type(account_type) {}
+
+    void deposit(double amount) override {
+        balance += amount;
+        std::cout << "Deposit of $" << amount << " successful. New balance: $" << balance << std::endl;
+    }
+
+    void withdraw(double amount) override {
+        if (balance >= amount) {
+            balance -= amount;
+            std::cout << "Withdrawal of $" << amount << " successful. New balance: $" << balance << std::endl;
+        } else {
+            std::cout << "Withdrawal of $" << amount << " failed. Insufficient funds." << std::endl;
+        }
+    }
+
+    void transfer(Account& target, double amount) override {
+        if (balance >= amount) {
+            balance -= amount;
+            target.deposit(amount);
+            std::cout << "Transfer of $" << amount << " successful. New balance: $" << balance << std::endl;
+        } else {
+            std::cout << "Transfer of $" << amount << " failed. Insufficient funds." << std::endl;
+        }
+    }
+
+    double get_balance() const {
+        return balance;
+    }
+
+    std::string get_account_number() const {
+        return account_number;
+    }
+
+    std::string get_account_type() const {
+        return account_type;
+    }
+
+private:
+    double balance;
+    std::string account_number;
+    std::string account_type;
+};
+
+// Customer class
+class Customer {
+public:
+    Customer(std::string name, std::string email, std::string phone_number)
+        : name(name), email(email), phone_number(phone_number) {}
+
+    void add_account(Account account) {
+        accounts.push_back(account);
+    }
+
+    void view_account_info() const {
+        std::cout << "Customer: " << name << std::endl;
+        for (const auto& account : accounts) {
+            std::cout << "Account type: " << account.get_account_type() 
+                      << ", account number: " << account.get_account_number()
+                      << ", balance: $" << account.get_balance() << std::endl;
+        }
+    }
+
+private:
+    std::string name;
+    std::string email;
+    std::string phone_number;
+    std::vector<Account> accounts;
+};
+
+
+class IndividualAccount : public Account {
+public:
+    IndividualAccount(double balance, std::string account_number)
+        : Account(balance, account_number, "Individual") {}
+};
+
+
+class BusinessAccount : public Account {
+public:
+    BusinessAccount(double balance, std::string account_number)
+        : Account(balance, account_number, "Business") {}
+};
+
+int main() {
+    
+    Customer alice("Alice", "alice", "1");
+    IndividualAccount alice_checking(1000, "123456");
+    IndividualAccount alice_savings(5000, "654321");
+    alice.add_account(alice_checking);
+    alice.add_account(alice_savings);
+
+    Customer bob("Bob", "bob", "2");
+    BusinessAccount bob_checking(20000, "789012");
+    bob.add_account(bob_checking);
+alice.view_account_info();
+std::cout << std::endl;
+bob.view_account_info();
+std::cout << std::endl;
+
+alice_checking.withdraw(500);
+std::cout << std::endl;
+
+bob_checking.transfer(alice_savings, 1000);
+std::cout << std::endl;
+
+alice_savings.transfer(bob_checking, 2000);
+std::cout << std::endl;
+
+alice.view_account_info();
+std::cout << std::endl;
+bob.view_account_info();
+
+return 0;
+}
