@@ -1,0 +1,107 @@
+//bank system
+
+#include<iostream>
+#include<string>
+#include<vector>
+
+class BankingOperation {
+public:
+    virtual void execute() = 0;
+};
+
+class Account {
+public:
+    virtual void deposit(double amount) = 0;
+    virtual void withdraw(double amount) = 0;
+    virtual void transfer(Account* account, double amount) = 0;
+    virtual void print_transaction_history() const = 0;
+};
+
+class IndividualAccount : public Account {
+public:
+
+    void deposit(double amount) override {}
+    void withdraw(double amount) override {}
+    void transfer(Account* account, double amount) override {}
+    void print_transaction_history() const override {}
+};
+
+class JointAccount : public Account {
+public:
+    void deposit(double amount) override {}
+    void withdraw(double amount) override {}
+    void transfer(Account* account, double amount) override {}
+    void print_transaction_history() const override {}
+};
+
+class Customer {
+public:
+    Customer(std::string name, std::string contact_info) : name_(name), 		contact_info_(contact_info) {}
+    
+    std::string get_name() const { return name_; }
+    
+    std::string get_contact_info() const { return contact_info_; }
+    
+    void add_account(Account* account) {
+        accounts_.push_back(account);
+    }
+    
+    std::vector<Account*> get_accounts() const {
+        return accounts_;
+    }
+    
+private:
+    std::string name_;
+    std::string contact_info_;
+    std::vector<Account*> accounts_;
+};
+
+
+class Transaction : public BankingOperation {
+public:
+    Transaction(Account* account, double amount, std::string type) 
+        : account_(account), amount_(amount), type_(type) {}
+    
+    void execute() override {}
+    
+private:
+    Account* account_;
+    double amount_;
+    std::string type_;
+};
+
+class Bank {
+public:
+    void add_customer(Customer* customer) {
+        customers_.push_back(customer);
+    }
+    
+    std::vector<Customer*> get_customers() const {
+        return customers_;
+    }
+    
+private:
+    std::vector<Customer*> customers_;
+};
+
+int main() {
+    Bank bank;
+    
+    IndividualAccount individual_account;
+    Customer customer("John Doe", "john");
+    
+    customer.add_account(&individual_account);
+    bank.add_customer(&customer);
+    individual_account.deposit(100.00);
+    individual_account.withdraw(50.00);
+    JointAccount joint_account;
+    individual_account.transfer(&joint_account, 25.0);
+    individual_account.print_transaction_history();
+    std::cout<< "Customer: " << customer.get_name() << ", Contact Info: " << customer.get_contact_info() << std::endl;
+
+for (auto account : customer.get_accounts()) {
+    std::cout << "Account Type: " << typeid(*account).name() << std::endl;
+}
+
+return 0;
+}
