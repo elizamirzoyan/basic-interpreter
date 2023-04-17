@@ -1,0 +1,100 @@
+#include <iostream>
+#include <string>
+#include <vector>
+
+using namespace std;
+
+class User {
+private:
+    string name;
+    string contact_info;
+public:
+    User(string name, string contact_info) {
+        this->name = name;
+        this->contact_info = contact_info;
+    }
+    string get_name() const {
+        return name;
+    }
+    string get_contact_info() const {
+        return contact_info;
+    }
+};
+
+class Message {
+private:
+    User* sender;
+    string content;
+public:
+    Message(User* sender, string content) {
+        this->sender = sender;
+        this->content = content;
+    }
+    User* get_sender() const {
+        return sender;
+    }
+    string get_content() const {
+        return content;
+    }
+};
+
+class TextMessage : public Message {
+public:
+    TextMessage(User* sender, string content) : Message(sender, content) {}
+};
+
+class MultimediaMessage : public Message {
+private:
+    string media_url;
+public:
+    MultimediaMessage(User* sender, string content, string media_url) : Message(sender, content) {
+        this->media_url = media_url;
+    }
+    string get_media_url() const {
+        return media_url;
+    }
+};
+
+class Conversation {
+private:
+    vector<User*> users;
+    vector<Message*> messages;
+public:
+    Conversation(vector<User*> users) {
+        this->users = users;
+    }
+    vector<User*> get_users() const {
+        return users;
+    }
+    void add_message(Message* message) {
+        messages.push_back(message);
+    }
+    vector<Message*> get_messages() const {
+        return messages;
+    }
+};
+
+class MessagingApp {
+private:
+    vector<User*> users;
+    vector<Conversation*> conversations;
+public:
+    User* create_user(string name, string contact_info) {
+        User* user = new User(name, contact_info);
+        users.push_back(user);
+        return user;
+    }
+    Conversation* create_conversation(vector<User*> users) {
+        Conversation* conversation = new Conversation(users);
+        conversations.push_back(conversation);
+        return conversation;
+    }
+    void send_message(User* sender, Conversation* conversation, string content) {
+        Message* message = new TextMessage(sender, content);
+        conversation->add_message(message);
+    }
+    void send_multimedia_message(User* sender, Conversation* conversation, string content, string media_url) {
+        Message* message = new MultimediaMessage(sender, content, media_url);
+        conversation->add_message(message);
+    }
+};
