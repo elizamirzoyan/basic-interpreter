@@ -1,0 +1,133 @@
+// hospital managment system
+
+#include <iostream>
+#include <vector>
+#include <string>
+
+// Forward declaration of classes
+class Doctor;
+class MedicalStaff;
+class Patient;
+class MedicalProcedure;
+
+// Base class for all medical operations
+class MedicalOperation {
+public:
+    virtual void perform() = 0;
+};
+
+// Concrete class for surgeries
+class Surgery : public MedicalOperation {
+public:
+    void perform() override {
+        std::cout << "Performing surgery..." << std::endl;
+    }
+};
+
+// Concrete class for check-ups
+class CheckUp : public MedicalOperation {
+public:
+    void perform() override {
+        std::cout << "Performing check-up..." << std::endl;
+    }
+};
+
+// Base class for all hospital employees
+class Employee {
+protected:
+    std::string name_;
+public:
+    Employee(std::string name) : name_(name) {}
+    std::string getName() const { return name_; }
+};
+
+// Class for medical staff
+class MedicalStaff : public Employee {
+protected:
+    std::string position_;
+public:
+    MedicalStaff(std::string name, std::string position) : Employee(name), position_(position) {}
+    std::string getPosition() const { return position_; }
+    void manageOperations() {
+        std::cout << "Managing hospital operations..." << std::endl;
+    }
+};
+
+// Class for doctors
+class Doctor : public Employee {
+private:
+    std::string contactInfo_;
+    std::vector<Patient*> patients_;
+public:
+    Doctor(std::string name, std::string contactInfo) : Employee(name), contactInfo_(contactInfo) {}
+    std::string getContactInfo() const { return contactInfo_; }
+    void addPatient(Patient* patient) { patients_.push_back(patient); }
+    void managePatient(Patient* patient) {
+        std::cout << "Managing patient " << patient->getName() << std::endl;
+        // Access patient information and appointments
+    }
+    void performProcedure(MedicalProcedure* procedure) {
+        procedure->perform();
+    }
+};
+
+// Class for patients
+class Patient {
+private:
+    std::string name_;
+    int age_;
+    std::string medicalHistory_;
+    std::vector<Doctor*> doctors_;
+public:
+    Patient(std::string name, int age, std::string medicalHistory) : name_(name), age_(age), medicalHistory_(medicalHistory) {}
+    std::string getName() const { return name_; }
+    int getAge() const { return age_; }
+    std::string getMedicalHistory() const { return medicalHistory_; }
+    void addDoctor(Doctor* doctor) { doctors_.push_back(doctor); }
+};
+
+// Abstract class for medical procedures
+class MedicalProcedure {
+public:
+    virtual void perform() = 0;
+};
+
+int main() {
+    // Create hospital employees
+    Doctor* doctor1 = new Doctor("John Doe", "555-1234");
+    Doctor* doctor2 = new Doctor("Jane Smith", "555-5678");
+    MedicalStaff* staff1 = new MedicalStaff("Bob Johnson", "Nurse");
+
+    // Create patients
+    Patient* patient1 = new Patient("Alice Brown", 30, "Asthma");
+    Patient* patient2 = new Patient("Bob Green", 45, "Heart disease");
+
+    // Assign patients to doctors
+    doctor1->addPatient(patient1);
+    doctor2->addPatient(patient2);
+
+    // Add doctors to patients
+    patient1->addDoctor(doctor1);
+    patient2->addDoctor(doctor2);
+
+    // Perform medical procedures
+    MedicalProcedure* procedure1 = new Surgery();
+    MedicalProcedure* procedure2 = new CheckUp();
+    doctor1->performProcedure(procedure1);
+doctor2->performProcedure(procedure2);
+
+// Manage patients and operations
+doctor1->managePatient(patient1);
+staff1->manageOperations();
+
+// Cleanup
+delete doctor1;
+delete doctor2;
+delete staff1;
+delete patient1;
+delete patient2;
+delete procedure1;
+delete procedure2;
+
+return 0;
+}
