@@ -1,0 +1,160 @@
+//car dealership system
+
+#include<iostream>
+#include<string>
+#include<vector>
+
+using namespace std;
+
+class Car{
+public:
+	string make;
+	string model;
+	double price;
+
+	Car(string make, string model, double price) {
+        this->make = make;
+        this->model = model;
+        this->price = price;
+    }
+	
+	virtual void display() {
+        std::cout << "Make: " << make << "\n";
+        std::cout << "Model: " << model  << "\n";
+        std::cout << "Price: " << price << "\n";
+    }
+
+
+};
+
+class ElectricCar : public Car {
+public:
+    int batteryCapacity;
+
+    ElectricCar(string make, string model, double price, int batteryCapacity)
+        : Car(make, model, price) {
+        this->batteryCapacity = batteryCapacity;
+    }
+};
+
+class HybridCar : public Car {
+public:
+    int gasTankCapacity;
+
+    HybridCar(string make, string model, double price, int gasTankCapacity)
+        : Car(make, model, price) {
+        this->gasTankCapacity = gasTankCapacity;
+    }
+};
+
+class SalesPerson {
+public:
+    string name;
+    double commissionRate;
+    vector<Car*> inventory;
+    vector<pair<Car*, string>> salesHistory; // car and customer name
+
+    SalesPerson(string name, double commissionRate) {
+        this->name = name;
+        this->commissionRate = commissionRate;
+    }
+
+    void addCarToInventory(Car* car) {
+        inventory.push_back(car);
+    }
+
+    void removeCarFromInventory(int index) {
+        inventory.erase(inventory.begin() + index);
+    }
+
+    void printInventory() {
+        cout << "Inventory of " << name << ":\n";
+        for (int i = 0; i < inventory.size(); i++) {
+            cout << i << ". " << inventory[i]->make << " " << inventory[i]->model
+                 << " $" << inventory[i]->price << "\n";
+        }
+    }
+
+    void sellCarToCustomer(int carIndex, string customerName) {
+        Car* car = inventory[carIndex];
+        double commission = car->price * commissionRate;
+        salesHistory.push_back(make_pair(car, customerName));
+        removeCarFromInventory(carIndex);
+        cout << "Sold " << car->make << " " << car->model << " to " << customerName
+             << " for $" << car->price << ", earning $" << commission << " in commission.\n";
+    }
+
+    void printSalesHistory() {
+        cout << "Sales history of " << name << ":\n";
+        for (int i = 0; i < salesHistory.size(); i++) {
+            cout << i << ". " << salesHistory[i].first->make << " " << salesHistory[i].first->model
+                 << " sold to " << salesHistory[i].second << endl;
+        }
+    }
+	
+	virtual void display() {
+        std::cout << "Name: " << name << "\n";
+        std::cout << "Commision Rate: " << commissionRate << "\n";
+     }
+
+};
+
+class Customer {
+public:
+    string name;
+    string contactInfo;
+
+    Customer(string name, string contactInfo) {
+        this->name = name;
+        this->contactInfo = contactInfo;
+    }
+
+    void searchAndBuyCar(vector<Car*>& inventory) {
+        cout << "Searching for cars...\n";
+        vector<Car*> availableCars;
+        for (int i = 0; i < inventory.size(); i++) {
+            if (inventory[i]->price <= 50000) { // limit the price for this example
+                availableCars.push_back(inventory[i]);
+            }
+        }
+        if (availableCars.size() == 0) {
+            cout << "No cars available for purchase.\n";
+            return;
+        }
+        cout << "Found " << availableCars.size() << " cars:\n";
+        for (int i = 0; i < availableCars.size(); i++) {
+            cout << i << ". " << availableCars[i]->make << " " << availableCars[i]->model << " $" << availableCars[i]->price << endl;
+    }
+    int choice;
+    do {
+        cout << "Enter the index of the car you want to buy: ";
+        cin >> choice;
+    } while (choice < 0 || choice >= availableCars.size());
+    Car* car = availableCars[choice];
+    cout << "Enter your name: ";
+    string customerName;
+    cin >> customerName;
+    cout << "Enter your contact information: ";
+    string contactInfo;
+    cin >> contactInfo;
+    Customer customer(customerName, contactInfo);
+    cout << "Sold " << car->make << " " << car->model << " to " << customerName
+         << " for $" << car->price << ".\n";
+}
+};
+
+int main() {
+	ElectricCar tesla("Tesla", "A", 7544, 4554);
+	HybridCar toyota("Toyota", "B", 4544, 454);
+	vector<Car*> inventory = {&tesla, &toyota};
+	SalesPerson Leyla("Leyla", 0.05);
+	Leyla.addCarToInventory(&tesla);
+	Leyla.addCarToInventory(&toyota);
+	Leyla.printInventory();
+	Leyla.sellCarToCustomer(0, "dkfdk");
+	Leyla.printInventory();
+	Leyla.printSalesHistory();
+	Customer vzGo("vzGo", "ddsd");
+	vzGo.searchAndBuyCar(inventory);
+return 0;
+}
