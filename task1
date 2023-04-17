@@ -1,0 +1,134 @@
+//banking system
+
+#include<iostream>
+#include<string>
+#include<vector>
+
+using namespace std;
+class Customer{
+	string name;
+	string address;
+	string contactInfo;
+public:
+	Customer(string name, string address, string contactInfo) {
+        this->name = name;
+        this->address = address;
+        this->contactInfo = contactInfo;
+    }
+
+    virtual void display() {
+        std::cout << "Name: " << name << endl;
+        std::cout << "Address: " << address << endl;
+        std::cout << "Contact Info: " << contactInfo << endl;
+    }
+};
+
+class Account{
+	Customer* customer;
+	int accountNumber;
+	std::string accountType;
+	double balance;//hopefully it's double
+	double interestRate;
+	vector <string> transactionHistory;
+public:
+	Account(Customer* customer, int accountNumber, string accountType, double balance, double interestRate) {
+        this->customer = customer;
+        this->accountNumber = accountNumber;
+        this->accountType = accountType;
+        this->balance = balance;
+        this->interestRate = interestRate;
+    }	
+
+	virtual void display() {
+        cout << "Account Number: " << accountNumber << endl;
+        cout << "Account Type: " << accountType << endl;
+        cout << "Balance: " << balance << endl;
+        cout << "Interest Rate: " << interestRate << endl;
+        cout << "Customer Information:" << endl;
+        customer->display();
+    }
+	
+	virtual void deposit(double amount) {
+        balance += amount;
+        transactionHistory.push_back("Deposit of $" + to_string(amount));
+    }
+
+    virtual void withdraw(double amount) {
+        if (balance >= amount) {
+            balance -= amount;
+            transactionHistory.push_back("Withdrawal of $" + to_string(amount));
+        } else {
+            cout << "U don't have enough money" << endl;
+        }
+    }
+};
+
+class SavingsAccount : public Account{
+public:
+    SavingsAccount(Customer* customer, int accountNumber, double balance)
+        : Account(customer, accountNumber, "Savings", balance, 0.05) {}
+
+    void display() override {
+        cout << "Savings Account Information:" << endl;
+        Account::display();
+    }
+};
+
+class CheckingAccount : public Account{
+public:
+    CheckingAccount(Customer* customer, int accountNumber, double balance)
+        : Account(customer, accountNumber, "Checking", balance, 0.02) {}
+
+    void display() override {
+        std::cout << "Checking Account Information:" << std::endl;
+        Account::display();
+    }
+};
+
+class Transaction{
+	Account* account;
+	std::string transactionType;
+	int amount;
+public:
+	Transaction(Account* account, std::string transactionType, double amount) {
+        this->account = account;
+        this->transactionType = transactionType;
+        this->amount = amount;
+    }
+
+    void execute() {
+        if (transactionType == "Deposit") {
+            account->deposit(amount);
+        } else if (transactionType == "Withdrawal") {
+            account->withdraw(amount);
+        } else {
+           std:: cout << "Invalid transaction type" << std::endl;
+        }
+    }
+};
+
+int main(){
+	Customer* customer1 = new Customer("Leonardo DiCaprio", "dont  know", "911");//Hi is kinda problematic
+    Customer* customer2 = new Customer("Hovhannes Tumanyan", "Dsegh", "123");
+
+    Account* account1 = new SavingsAccount(customer1, 545, 6798);
+    Account* account2 = new CheckingAccount(customer2, 87878, 6545454);
+
+    account1->display();
+    std:: cout << std::endl;
+    account2->display();
+    std::cout << std::endl;
+
+    Transaction transaction1(account1, "Deposit", 7854);
+	transaction1.execute();
+
+	Transaction transaction2(account2, "Withdrawal", 154545);
+	transaction2.execute();
+
+	std::cout << std::endl;
+	account1->display();
+	std::cout << std::endl;
+	account2->display();
+	std::cout << std::endl;
+	return 0;
+}
