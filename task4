@@ -1,0 +1,235 @@
+// music streamin service
+
+#include <iostream>
+#include <vector>
+#include <string>
+#include <ctime>
+
+using namespace std;
+
+// Abstract class for music operations
+class MusicOperations {
+public:
+    virtual void play() = 0;
+    virtual void pause() = 0;
+    virtual void stop() = 0;
+};
+
+// Interface for rock music
+class RockMusic : public MusicOperations {
+public:
+    virtual void play() {
+        cout << "Playing rock music..." << endl;
+    }
+    virtual void pause() {
+        cout << "Pausing rock music..." << endl;
+    }
+    virtual void stop() {
+        cout << "Stopping rock music..." << endl;
+    }
+};
+
+// Interface for pop music
+class PopMusic : public MusicOperations {
+public:
+    virtual void play() {
+        cout << "Playing pop music..." << endl;
+    }
+    virtual void pause() {
+        cout << "Pausing pop music..." << endl;
+    }
+    virtual void stop() {
+        cout << "Stopping pop music..." << endl;
+    }
+};
+
+// Class for a song
+class Song {
+private:
+    string title;
+    string artist;
+    int length; // in seconds
+public:
+    Song(string t, string a, int l) {
+        title = t;
+        artist = a;
+        length = l;
+    }
+    string getTitle() {
+        return title;
+    }
+    string getArtist() {
+        return artist;
+    }
+    int getLength() {
+        return length;
+    }
+};
+
+// Class for an album
+class Album {
+private:
+    string title;
+    string artist;
+    time_t releaseDate;
+    vector<Song*> songs;
+public:
+    Album(string t, string a, time_t r) {
+        title = t;
+        artist = a;
+        releaseDate = r;
+    }
+    string getTitle() {
+        return title;
+    }
+    string getArtist() {
+        return artist;
+    }
+    time_t getReleaseDate() {
+        return releaseDate;
+    }
+    void addSong(Song* song) {
+        songs.push_back(song);
+    }
+    vector<Song*> getSongs() {
+        return songs;
+    }
+};
+
+// Class for a playlist
+class Playlist {
+private:
+    string name;
+    vector<Song*> songs;
+public:
+    Playlist(string n) {
+        name = n;
+    }
+    string getName() {
+        return name;
+    }
+    void addSong(Song* song) {
+        songs.push_back(song);
+    }
+    vector<Song*> getSongs() {
+        return songs;
+    }
+};
+
+// Class for a music streaming service
+class MusicStreamingService {
+private:
+    vector<Album*> albums;
+    vector<Playlist*> playlists;
+    vector<Song*> history;
+public:
+    void addAlbum(Album* album) {
+        albums.push_back(album);
+    }
+    void addPlaylist(Playlist* playlist) {
+        playlists.push_back(playlist);
+    }
+    vector<Song*> searchSongs(string keyword) {
+        vector<Song*> results;
+        for (int i = 0; i < albums.size(); i++) {
+            vector<Song*> albumSongs = albums[i]->getSongs();
+            for (int j = 0; j < albumSongs.size(); j++) {
+                Song* song = albumSongs[j];
+                if (song->getTitle().find(keyword) != string::npos ||
+                    song->getArtist().find(keyword) != string::npos) {
+                    results.push_back(song);
+                }
+            }
+        }
+        return results;
+    }
+    void playSong(Song* song) {
+        history.push_back(song);
+        RockMusic* rock = new RockMusic();
+       
+		PopMusic* pop = new PopMusic();
+
+if (song->getLength() > 180) {
+rock->play();
+} else {
+pop->play();
+}
+}
+void pauseSong(Song* song) {
+if (song->getLength() > 180) {
+RockMusic* rock = new RockMusic();
+rock->pause();
+} else {
+PopMusic* pop = new PopMusic();
+pop->pause();
+}
+}
+void stopSong(Song* song) {
+if (song->getLength() > 180) {
+RockMusic* rock = new RockMusic();
+rock->stop();
+} else {
+PopMusic* pop = new PopMusic();
+pop->stop();
+}
+}
+void addSongToPlaylist(Song* song, Playlist* playlist) {
+playlist->addSong(song);
+}
+void removeSongFromPlaylist(Song* song, Playlist* playlist) {
+vector<Song*> songs = playlist->getSongs();
+for (int i = 0; i < songs.size(); i++) {
+if (songs[i] == song) {
+songs.erase(songs.begin() + i);
+break;
+}
+}
+}
+void viewListeningHistory() {
+cout << "Listening history:" << endl;
+for (int i = 0; i < history.size(); i++) {
+cout << history[i]->getTitle() << " by " << history[i]->getArtist() << endl;
+}
+}
+};
+
+int main() {
+// create some songs
+Song* s1 = new Song("Stairway to Heaven", "Led Zeppelin", 482);
+Song* s2 = new Song("Bohemian Rhapsody", "Queen", 354);
+Song* s3 = new Song("Shape of You", "Ed Sheeran", 233);
+// create an album
+Album* a1 = new Album("Led Zeppelin IV", "Led Zeppelin", time(NULL));
+a1->addSong(s1);
+
+// create a playlist
+Playlist* p1 = new Playlist("My Playlist");
+p1->addSong(s1);
+p1->addSong(s2);
+
+// create a music streaming service
+MusicStreamingService* service = new MusicStreamingService();
+service->addAlbum(a1);
+service->addPlaylist(p1);
+
+// search for songs
+vector<Song*> results = service->searchSongs("Queen");
+cout << "Search results:" << endl;
+for (int i = 0; i < results.size(); i++) {
+    cout << results[i]->getTitle() << " by " << results[i]->getArtist() << endl;
+}
+
+// play a song
+service->playSong(s2);
+
+// pause a song
+service->pauseSong(s2);
+
+// remove a song from a playlist
+service->removeSongFromPlaylist(s1, p1);
+
+// view listening history
+service->viewListeningHistory();
+
+return 0;
+}
