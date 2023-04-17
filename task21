@@ -1,0 +1,212 @@
+//music streaming platform
+
+#include <iostream>
+#include <string>
+#include <vector>
+
+
+class MusicStreaming {
+public:
+    virtual void search(std::string query) = 0;
+    virtual void listen(std::string title) = 0;
+    virtual void createPlaylist(std::string name) = 0;
+    virtual void sharePlaylist(std::string name) = 0;
+};
+
+
+class Song {
+protected:
+    std::string title;
+    std::string artist;
+    int duration;
+
+public:
+    Song(std::string title, std::string artist, int duration)
+        : title(title), artist(artist), duration(duration) {}
+
+    std::string getTitle() const { return title; }
+    std::string getArtist() const { return artist; }
+    int getDuration() const { return duration; }
+};
+
+
+class RockSong : public Song {
+public:
+    RockSong(std::string title, std::string artist, int duration)
+        : Song(title, artist, duration) {}
+};
+
+class PopSong : public Song {
+public:
+    PopSong(std::string title, std::string artist, int duration)
+        : Song(title, artist, duration) {}
+};
+
+
+class Artist {
+protected:
+    std::string name;
+    std::string contactInfo;
+
+public:
+    Artist(std::string name, std::string contactInfo)
+        : name(name), contactInfo(contactInfo) {}
+
+    std::string getName() const { return name; }
+    std::string getContactInfo() const { return contactInfo; }
+};
+
+
+class User {
+protected:
+    std::string name;
+    std::string contactInfo;
+    std::vector<std::string> favoriteSongs;
+    std::vector<std::string> favoriteArtists;
+
+public:
+    User(std::string name, std::string contactInfo)
+        : name(name), contactInfo(contactInfo) {}
+
+    std::string getName() const { return name; }
+    std::string getContactInfo() const { return contactInfo; }
+
+    void addFavoriteSong(std::string title) { favoriteSongs.push_back(title); }
+    void addFavoriteArtist(std::string name) { favoriteArtists.push_back(name); }
+    void removeFavoriteSong(std::string title) {
+        favoriteSongs.erase(std::remove(favoriteSongs.begin(), favoriteSongs.end(), title),
+                            favoriteSongs.end());
+    }
+    void removeFavoriteArtist(std::string name) {
+        favoriteArtists.erase(std::remove(favoriteArtists.begin(), favoriteArtists.end(), name),
+                              favoriteArtists.end());
+    }
+
+    void displayFavorites() const {
+        std::cout << "Favorite songs:\n";
+        for (const auto& title : favoriteSongs) {
+            std::cout << "- " << title << '\n';
+        }
+        std::cout << "Favorite artists:\n";
+        for (const auto& name : favoriteArtists) {
+            std::cout << "- " << name << '\n';
+        }
+    }
+};
+
+
+class MusicPlatform : public MusicStreaming {
+private:
+    std::vector<Song*> songs;
+    std::vector<Artist*> artists;
+    std::vector<User*> users;
+    std::vector<std::string> playlists;
+
+public:
+    
+    void search(std::string query) override {
+        std::cout << "Search results for '" << query << "':\n";
+        for (const auto& song : songs) {
+            if (song->getTitle().find(query) != std::string::npos            || song->getArtist().find(query) != std::string::npos) {
+            std::cout << "- " << song->getTitle() << " by " << song->getArtist() << '\n';
+        }
+    }
+    for (const auto& artist : artists) {
+        if (artist->getName().find(query) != std::string::npos) {
+            std::cout << "- " << artist->getName() << '\n';
+        }
+    }
+}
+
+
+void listen(std::string title) override {
+    std::cout << "Now playing: " << title << '\n';
+}
+
+
+void createPlaylist(std::string name) override {
+    playlists.push_back(name);
+    std::cout << "Created new playlist: " << name << '\n';
+}
+
+
+void sharePlaylist(std::string name) override {
+    auto it = std::find(playlists.begin(), playlists.end(), name);
+    if (it != playlists.end()) {
+        std::cout << "Playlist '" << name << "' has been shared.\n";
+    } else {
+        std::cout << "Playlist '" << name << "' not found.\n";
+    }
+}
+
+
+void addSong(Song* song) { songs.push_back(song); }
+
+
+void addArtist(Artist* artist) { artists.push_back(artist); }
+
+
+void addUser(User* user) { users.push_back(user); }
+
+
+void displaySongs() const {
+    std::cout << "All songs on the platform:\n";
+    for (const auto& song : songs) {
+        std::cout << "- " << song->getTitle() << " by " << song->getArtist() << '\n';
+    }
+}
+
+
+void displayArtists() const {
+    std::cout << "All artists on the platform:\n";
+    for (const auto& artist : artists) {
+        std::cout << "- " << artist->getName() << '\n';
+    }
+}
+
+void displayUsers() const {
+    std::cout << "All users on the platform:\n";
+    for (const auto& user : users) {
+        std::cout << "- " << user->getName() << '\n';
+    }
+}
+};
+
+int main() {
+
+   RockSong* song1 = new RockSong("Back in Black", "AC/DC", 565654);
+   PopSong* song2 = new PopSong("Shape of You", "Ed Sheeran", 544565457);
+
+   Artist* artist1 = new Artist("AC/DC", "jdk");
+   Artist* artist2 = new Artist("Ed Sheeran", "cdc");
+
+
+   User* user1 = new User("Larisa Saribekyan", "dcmdk");
+   User* user2 = new User("Xosrov Kotak", "444544");
+   MusicPlatform platform;
+
+   platform.addSong(song1);
+   platform.addSong(song2);
+   platform.addArtist(artist1);
+   platform.addArtist(artist2);
+   platform.addUser(user1);
+   platform.addUser(user2);
+   platform.displaySongs();
+   platform.displayArtists();
+   platform.displayUsers();
+   platform.search("AC/DC");
+
+   platform.listen("Back in Black");
+   
+   platform.createPlaylist("My Playlist");
+   platform.sharePlaylist("My Playlist");
+
+delete song1;
+delete song2;
+delete artist1;
+delete artist2;
+delete user1;
+delete user2;
+
+return 0;
+}
