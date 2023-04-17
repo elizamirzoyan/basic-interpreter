@@ -1,0 +1,228 @@
+//library system
+
+#include<iostream>
+#include<string>
+#include<vector>
+using namespace std;
+class Book {
+  private:
+    string title;
+    string author;
+    int publicationYear;
+    string category;
+  public:
+    Book(string title, string author, int publicationYear, string category);
+    string getTitle();
+    string getAuthor();
+    int getPublicationYear();
+    string getCategory();
+};
+
+class Borrower {
+  private:
+    string name;
+    string contactInfo;
+    vector<Book*> borrowedBooks;
+  public:
+    Borrower(string name, string contactInfo);
+    string getName();
+    string getContactInfo();
+    void borrowBook(Book* book);
+    void returnBook(Book* book);
+    vector<Book*> getBorrowedBooks();
+};
+class Librarian {
+  private:
+    string name;
+    string contactInfo;
+  public:
+    Librarian(string name, string contactInfo);
+    string getName();
+    string getContactInfo();
+    void addBook(Book* book);
+    void removeBook(Book* book);
+    vector<Book*> searchBook(string keyword);
+};
+class Library {
+  protected:
+    vector<Book*> books;
+    vector<Borrower*> borrowers;
+    vector<Librarian*> librarians;
+  public:
+    virtual void addBook(Book* book) = 0;
+    virtual void removeBook(Book* book) = 0;
+    virtual vector<Book*> searchBook(string keyword) = 0;
+    virtual void borrowBook(Book* book, Borrower* borrower) = 0;
+    virtual void returnBook(Book* book, Borrower* borrower) = 0;
+    virtual vector<Book*> getBorrowedBooks(Borrower* borrower) = 0;
+};
+class MyLibrary : public Library {
+  public:
+    void addBook(Book* book) override;
+    void removeBook(Book* book) override;
+    vector<Book*> searchBook(string keyword) override;
+    void borrowBook(Book* book, Borrower* borrower) override;
+    void returnBook(Book* book, Borrower* borrower) override;
+    vector<Book*> getBorrowedBooks(Borrower* borrower) override;
+};
+Book::Book(string title, string author, int publicationYear, string category) {
+    this->title = title;
+    this->author = author;
+    this->publicationYear = publicationYear;
+    this->category = category;
+}
+
+string Book::getTitle() {
+    return title;
+}
+
+string Book::getAuthor() {
+    return author;
+}
+
+int Book::getPublicationYear() {
+    return publicationYear;
+}
+
+string Book::getCategory() {
+    return category;
+}
+Borrower::Borrower(string name, string contactInfo) {
+    this->name = name;
+    this->contactInfo = contactInfo;
+}
+
+string Borrower::getName() {
+    return name;
+}
+
+string Borrower::getContactInfo() {
+    return contactInfo;
+}
+
+void Borrower::borrowBook(Book* book) {
+    borrowedBooks.push_back(book);
+}
+
+void Borrower::returnBook(Book* book) {
+    for (int i = 0; i < borrowedBooks.size(); i++) {
+        if (borrowedBooks[i] == book) {
+            borrowedBooks.erase(borrowedBooks.begin() + i);
+            break;
+        }
+    }
+}
+
+vector<Book*> Borrower::getBorrowedBooks() {
+    return borrowedBooks;
+}
+Librarian::Librarian(string name, string contactInfo) {
+    this->name = name;
+    this->contactInfo = contactInfo;
+}
+
+string Librarian::getName() {
+    return name;
+}
+
+string Librarian::getContactInfo() {
+    return contactInfo;
+}
+
+void Librarian::addBook(Book* book) {
+    books.push_back(book);
+}
+
+void Librarian::removeBook(Book* book) {
+    for (int i = 0; i < books.size(); i++) {
+        if (books[i] == book) {
+            books.erase(books.begin() + i);
+            break;
+        }
+    }
+}
+
+vector<Book*> Librarian::searchBook(string keyword) {
+    vector<Book*> results;
+    for (int i = 0; i < books.size(); i++) {
+        if (books[i]->getTitle().find(keyword) != string::npos || books[i]->getAuthor().find(keyword) != string::npos || books[i]->getCategory().find(keyword) != string::npos) {
+            results.push_back(books[i]);
+        }
+    }
+    return results;
+}
+void MyLibrary::addBook(Book* book) {
+    librarians[0]->addBook(book); // Only one librarian is assumed to exist for simplicity
+}
+
+void MyLibrary::removeBook(Book* book) {
+    librarians[0]->removeBook(book); // Only one librarian is assumed to exist for simplicity
+}
+
+vector<Book*> MyLibrary::searchBook(string keyword) {
+    vector<Book*> results;
+    for (int i = 0; i < books.size(); i++) {
+        if (books[i]->getTitle().find(keyword) != string::npos || books[i]->getAuthor().find(keyword) != string::npos || books[i]->getCategory().find(keyword) != string::npos) {
+            results.push_back(books[i]);
+        }
+    }
+    return results;
+}
+
+void MyLibrary::borrowBook(Book* book, Borrower* borrower) {
+    borrower->borrowBook(book);
+}
+
+void MyLibrary::returnBook(Book* book, Borrower* borrower) {
+    borrower->returnBook(book);
+}
+
+vector<Book*> MyLibrary::getBorrowedBooks(Borrower* borrower) {
+return borrower->getBorrowedBooks();
+}
+int main() {
+Book* book1 = new FictionBook("The Great Gatsby", "F. Scott Fitzgerald", 1925, "Classic");
+Book* book2 = new NonFictionBook("Sapiens: A Brief History of Humankind", "Yuval Noah Harari", 2011, "History");
+Book* book3 = new FictionBook("To Kill a Mockingbird", "Harper Lee", 1960, "Classic");
+Book* book4 = new FictionBook("Pride and Prejudice", "Jane Austen", 1813, "Classic");
+Borrower* borrower1 = new Borrower("John Doe", "johndoe@gmail.com");
+
+Librarian* librarian1 = new Librarian("Mary Smith", "marysmith@gmail.com");
+
+MyLibrary library;
+
+library.addBook(book1);
+library.addBook(book2);
+library.addBook(book3);
+library.addBook(book4);
+
+vector<Book*> results = library.searchBook("Mockingbird");
+for (int i = 0; i < results.size(); i++) {
+    cout << "Title: " << results[i]->getTitle() << endl;
+    cout << "Author: " << results[i]->getAuthor() << endl;
+    cout << "Publication Year: " << results[i]->getPublicationYear() << endl;
+    cout << "Category: " << results[i]->getCategory() << endl;
+}
+
+library.borrowBook(book1, borrower1);
+
+vector<Book*> borrowedBooks = library.getBorrowedBooks(borrower1);
+for (int i = 0; i < borrowedBooks.size(); i++) {
+    cout << "Title: " << borrowedBooks[i]->getTitle() << endl;
+    cout << "Author: " << borrowedBooks[i]->getAuthor() << endl;
+    cout << "Publication Year: " << borrowedBooks[i]->getPublicationYear() << endl;
+    cout << "Category: " << borrowedBooks[i]->getCategory() << endl;
+}
+
+library.returnBook(book1, borrower1);
+
+borrowedBooks = library.getBorrowedBooks(borrower1);
+for (int i = 0; i < borrowedBooks.size(); i++) {
+    cout << "Title: " << borrowedBooks[i]->getTitle() << endl;
+    cout << "Author: " << borrowedBooks[i]->getAuthor() << endl;
+    cout << "Publication Year: " << borrowedBooks[i]->getPublicationYear() << endl;
+    cout << "Category: " << borrowedBooks[i]->getCategory() << endl;
+}
+
+return 0;
+}
