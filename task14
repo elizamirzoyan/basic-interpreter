@@ -1,0 +1,147 @@
+// job search platform
+
+#include <iostream>
+#include <vector>
+#include <string>
+#include <memory>
+
+using namespace std;
+
+
+class JobPostingInterface {
+public:
+    virtual string getTitle() = 0;
+    virtual string getDescription() = 0;
+    virtual double getSalary() = 0;
+};
+
+class JobSearchInterface {
+public:
+    virtual void searchJobs(string query) = 0;
+    virtual void applyToJob(shared_ptr<JobPostingInterface> jobPosting) = 0;
+};
+
+class CompanyInterface {
+public:
+    virtual string getName() = 0;
+    virtual void postJob(shared_ptr<JobPostingInterface> jobPosting) = 0;
+    virtual void reviewApplications() = 0;
+};
+
+
+class JobPosting : public JobPostingInterface {
+protected:
+    string title;
+    string description;
+    double salary;
+public:
+    JobPosting(string title, string description, double salary)
+        : title(title), description(description), salary(salary) {}
+
+    string getTitle() override {
+        return title;
+    }
+
+    string getDescription() override {
+        return description;
+    }
+
+    double getSalary() override {
+        return salary;
+    }
+};
+
+class FullTimeJobPosting : public JobPosting {
+public:
+    FullTimeJobPosting(string title, string description, double salary)
+        : JobPosting(title, description, salary) {}
+};
+
+class PartTimeJobPosting : public JobPosting {
+public:
+    PartTimeJobPosting(string title, string description, double salary)
+        : JobPosting(title, description, salary) {}
+};
+
+class JobSeeker {
+protected:
+    string name;
+    string contactInfo;
+    string resume;
+public:
+    JobSeeker(string name, string contactInfo, string resume)
+        : name(name), contactInfo(contactInfo), resume(resume) {}
+};
+
+class JobSearch : public JobSearchInterface {
+protected:
+    vector<shared_ptr<JobPostingInterface>> jobPostings;
+public:
+    void searchJobs(string query) override {
+        cout << "Searching for jobs matching query: " << query << endl;
+        for (auto jobPosting : jobPostings) {
+            if (jobPosting->getTitle().find(query) != string::npos
+                || jobPosting->getDescription().find(query) != string::npos) {
+                cout << jobPosting->getTitle() << endl;
+                cout << "Salary: " << jobPosting->getSalary() << endl;
+                cout << jobPosting->getDescription() << endl;
+                cout << endl;
+            }
+        }
+    }
+
+    void applyToJob(shared_ptr<JobPostingInterface> jobPosting) override {
+        cout << "Applying to job: " << jobPosting->getTitle() << endl;
+        cout << "Resume: " << endl;
+        // Print job seeker's resume
+        cout << endl;
+    }
+};
+
+class Company : public CompanyInterface {
+protected:
+    string name;
+    string contactInfo;
+    vector<shared_ptr<JobPostingInterface>> jobPostings;
+public:
+    Company(string name, string contactInfo)
+        : name(name), contactInfo(contactInfo) {}
+
+    string getName() override {
+        return name;
+    }
+
+    void postJob(shared_ptr<JobPostingInterface> jobPosting) override {
+        jobPostings.push_back(jobPosting);
+    }
+
+    void reviewApplications() override {
+        for (auto jobPosting : jobPostings) {
+            cout << "Reviewing applications for job: " << jobPosting->getTitle() << endl;
+
+        }
+    }
+};
+
+
+int main() {
+    auto jobSeeker = make_shared<JobSeeker>("John Doe", "johndoe", "My resume");
+auto jobSearch = make_shared<JobSearch>();
+
+auto company1 = make_shared<Company>("Company A", "info");
+auto company2 = make_shared<Company>("Company B", "info");
+
+auto jobPosting1 = make_shared<FullTimeJobPosting>("Software Engineer", "Develop software applications", 100000);
+auto jobPosting2 = make_shared<PartTimeJobPosting>("Data Entry Clerk", "Enter data into database", 20);
+
+company1->postJob(jobPosting1);
+company2->postJob(jobPosting2);
+
+jobSearch->searchJobs("software");
+
+jobSearch->applyToJob(jobPosting1);
+
+company1->reviewApplications();
+
+return 0;
+}
