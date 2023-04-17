@@ -1,0 +1,172 @@
+#include <iostream>
+#include <string>
+#include <vector>
+#include <ctime>
+
+using namespace std;
+
+
+class Theater {
+protected:
+    int capacity;
+    vector<vector<int>> seats; 
+public:
+    Theater(int capacity) {
+        this->capacity = capacity;
+       
+        seats.resize(10, vector<int>(capacity/10, 0));
+    }
+    virtual string getTheaterType() = 0; 
+    int getCapacity() { return capacity; }
+    bool reserveSeat(int row, int col) { 
+        if (seats[row][col] == 0) {
+            seats[row][col] = 1;
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+};
+
+
+class StandardTheater : public Theater {
+public:
+    StandardTheater(int capacity) : Theater(capacity) {}
+    string getTheaterType() override { return "Standard"; }
+};
+
+
+class IMAXTheater : public Theater {
+public:
+    IMAXTheater(int capacity) : Theater(capacity) {}
+    string getTheaterType() override { return "IMAX"; }
+};
+
+
+class Movie {
+private:
+    string title;
+    string genre;
+    int length;
+public:
+    Movie(string title, string genre, int length) {
+        this->title = title;
+        this->genre = genre;
+        this->length = length;
+    }
+    string getTitle() { return title; }
+    string getGenre() { return genre; }
+    int getLength() { return length; }
+};
+
+
+class Showtime {
+private:
+    Movie* movie;
+    Theater* theater;
+    time_t dateTime;
+public:
+    Showtime(Movie* movie, Theater* theater, time_t dateTime) {
+        this->movie = movie;
+        this->theater = theater;
+        this->dateTime = dateTime;
+    }
+    Movie* getMovie() { return movie; }
+    Theater* getTheater() { return theater; }
+    time_t getDateTime() { return dateTime; }
+};
+
+
+class MovieTheater {
+private:
+    vector<Movie*> movies;
+    vector<Theater*> theaters;
+    vector<Showtime*> showtimes;
+public:
+    
+    void addMovie(string title, string genre, int length) {
+        Movie* movie = new Movie(title, genre, length);
+        movies.push_back(movie);
+    }
+    
+    void addTheater(Theater* theater) {
+        theaters.push_back(theater);
+    }
+    
+    void addShowtime(Movie* movie, Theater* theater, time_t dateTime) {
+        Showtime* showtime = new Showtime(movie, theater, dateTime);
+        showtimes.push_back(showtime);
+    }
+    
+    void displayMoviesAndShowtimes() {
+        cout << "Available Movies:\n";
+        for (int i = 0; i < movies.size(); i++) {
+            cout << i+1 << ". " << movies[i]->getTitle() << " (" << movies[i]->getGenre() << ", " << movies[i]->getLength() << " min)\n";
+            cout << "  Showtimes:\n";
+            for (int j = 0; j < showtimes.size(); j++) {
+if (showtimes[j]->getMovie() == movies[i]) {
+
+char dateTimeStr[80];
+strftime(dateTimeStr, sizeof(dateTimeStr), "%Y-%m-%d %H:%M", localtime(&showtimes[j]->getDateTime()));
+cout << " " << dateTimeStr << " at " << showtimes[j]->getTheater()->getTheaterType() << " Theater (Capacity: " << showtimes[j]->getTheater()->getCapacity() << ")\n";
+}
+}
+cout << endl;
+}
+}
+
+void reserveSeats(Showtime* showtime, int numSeats) {
+Theater* theater = showtime->getTheater();
+int capacity = theater->getCapacity();
+int numAvailable = capacity - (count(seats.begin(), seats.end(), 1));
+if (numAvailable < numSeats) {
+cout << "Not enough seats available.\n";
+return;
+}
+cout << "Enter row and column numbers for " << numSeats << " seat(s):\n";
+for (int i = 0; i < numSeats; i++) {
+int row, col;
+cin >> row >> col;
+if (row < 0 || row > 9 || col < 0 || col > capacity/10 || !theater->reserveSeat(row, col)) {
+cout << "Invalid seat or already reserved.\n";
+return;
+}
+seats[row][col] = 1;
+}
+cout << "Seats reserved successfully.\n";
+}
+
+void purchaseTickets(Showtime* showtime, int numSeats) {
+Theater* theater = showtime->getTheater();
+int price = 10; 
+int totalCost = numSeats * price;
+cout << "Total cost: $" << totalCost << endl;
+reserveSeats(showtime, numSeats);
+}
+};
+
+
+int main() {
+
+MovieTheater theater;
+
+theater.addMovie("Avengers: Endgame", "Action", 181);
+theater.addMovie("The Lion King", "Animation", 118);
+
+theater.addTheater(new StandardTheater(100));
+theater.addTheater(new IMAXTheater(50));
+
+time_t dateTime1 = time(0) + 86400; // Tomorrow
+time_t dateTime2 = time(0) + 172800; // Day after tomorrow
+theater.addShowtime(theater.movies[0], theater.theaters[0], dateTime1);
+theater.addShowtime(theater.movies[0], theater.theaters[1], dateTime1);
+theater.addShowtime(theater.movies[0], theater.theaters[0], dateTime2);
+theater.addShowtime(theater.movies[1], theater.theaters[0], dateTime1);
+
+theater.displayMoviesAndShowtimes();
+
+theater.reserveSeats(theater.showtimes[0], 3);
+theater.purchaseTickets(theater.showtimes[0], 3);
+return 0;
+}
