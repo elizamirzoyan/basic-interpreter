@@ -1,0 +1,90 @@
+//fitness tracking sytem
+
+#include <iostream>
+#include <string>
+#include <vector>
+
+using namespace std;
+
+
+class FitnessTracker {
+public:
+    virtual void trackProgress() = 0;
+};
+
+
+class Exercise {
+protected:
+    string name;
+    string muscleGroup;
+public:
+    Exercise(string n, string mg) : name(n), muscleGroup(mg) {}
+    virtual ~Exercise() {}
+    string getName() const { return name; }
+    string getMuscleGroup() const { return muscleGroup; }
+};
+
+class Cardio : public Exercise {
+public:
+    Cardio(string n, string mg) : Exercise(n, mg) {}
+};
+
+class Strength : public Exercise {
+public:
+    Strength(string n, string mg) : Exercise(n, mg) {}
+};
+
+// User class
+class User {
+private:
+    string name;
+    string contactInfo;
+    vector<Exercise*> favoriteExercises;
+public:
+    User(string n, string ci) : name(n), contactInfo(ci) {}
+    string getName() const { return name; }
+    string getContactInfo() const { return contactInfo; }
+    vector<Exercise*> getFavoriteExercises() const { return favoriteExercises; }
+    void addFavoriteExercise(Exercise* e) { favoriteExercises.push_back(e); }
+};
+
+
+class WorkoutPlan : public FitnessTracker {
+private:
+    User* user;
+    vector<Exercise*> exercises;
+    int duration; // in minutes
+public:
+    WorkoutPlan(User* u, vector<Exercise*> e, int d) : user(u), exercises(e), duration(d) {}
+    void trackProgress() {
+        cout << "Tracking progress for workout plan of " << user->getName() << endl;
+        // TODO
+    }
+};
+
+
+int main() {
+    
+    Exercise* pushups = new Strength("Pushups", "Chest");
+    Exercise* squats = new Strength("Squats", "Legs");
+    Exercise* running = new Cardio("Running", "Cardiovascular");
+
+    
+    User* alice = new User("Alice", "alice@example.com");
+    alice->addFavoriteExercise(pushups);
+    alice->addFavoriteExercise(squats);
+    User* bob = new User("Bob", "bob@example.com");
+    bob->addFavoriteExercise(running);
+
+    
+    vector<Exercise*> planExercises = {pushups, squats};
+    WorkoutPlan* plan1 = new WorkoutPlan(alice, planExercises, 30);
+    planExercises.push_back(running);
+    WorkoutPlan* plan2 = new WorkoutPlan(bob, planExercises, 45);
+
+    
+    plan1->trackProgress();
+    plan2->trackProgress();
+
+    return 0;
+}
