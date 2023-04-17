@@ -1,0 +1,115 @@
+//social media platform
+
+#include <iostream>
+#include <string>
+#include <vector>
+#include <ctime>
+
+class User {
+public:
+    User(std::string name, std::string contact_info) : name_(name), contact_info_(contact_info) {}
+    std::string GetName() const { return name_; }
+    std::string GetContactInfo() const { return contact_info_; }
+private:
+    std::string name_;
+    std::string contact_info_;
+};
+
+class Post {
+public:
+    Post(User* user, std::string content) : user_(user), content_(content) {
+        time_t now = time(0);
+        date_ = ctime(&now);
+    }
+    User* GetUser() const { return user_; }
+    std::string GetContent() const { return content_; }
+    std::string GetDate() const { return date_; }
+private:
+    User* user_;
+    std::string content_;
+    std::string date_;
+};
+
+class Comment {
+public:
+    Comment(User* user, std::string content) : user_(user), content_(content) {
+        time_t now = time(0);
+        date_ = ctime(&now);
+    }
+    User* GetUser() const { return user_; }
+    std::string GetContent() const { return content_; }
+    std::string GetDate() const { return date_; }
+private:
+    User* user_;
+    std::string content_;
+    std::string date_;
+};
+
+class TextPost : public Post {
+public:
+    TextPost(User* user, std::string content) : Post(user, content) {}
+};
+
+class PhotoPost : public Post {
+public:
+    PhotoPost(User* user, std::string content, std::string image_url) : Post(user, content), image_url_(image_url) {}
+    std::string GetImageUrl() const { return image_url_; }
+private:
+    std::string image_url_;
+};
+
+class SocialMedia {
+public:
+    virtual void CreateUser(std::string name, std::string contact_info) = 0;
+    virtual void CreateTextPost(User* user, std::string content) = 0;
+    virtual void CreatePhotoPost(User* user, std::string content, std::string image_url) = 0;
+    virtual void AddComment(Post* post, User* user, std::string content) = 0;
+    virtual void PrintPosts() = 0;
+};
+
+class Facebook : public SocialMedia {
+public:
+    void CreateUser(std::string name, std::string contact_info) override {
+        users_.push_back(new User(name, contact_info));
+    }
+    void CreateTextPost(User* user, std::string content) override {
+        posts_.push_back(new TextPost(user, content));
+    }
+    void CreatePhotoPost(User* user, std::string content, std::string image_url) override {
+        posts_.push_back(new PhotoPost(user, content, image_url));
+    }
+    void AddComment(Post* post, User* user, std::string content) override {
+        post->comments.push_back(new Comment(user, content));
+    }
+    void PrintPosts() override {
+        for (auto post : posts_) {
+            std::cout << post->GetUser()->GetName() << " posted on " << post->GetDate() << ": " << post->GetContent() << std::endl;
+            for (auto comment : post->comments) {
+                std::cout << "  " << comment->GetUser()->GetName() << " commented on " << comment->GetDate() << ": " << comment->GetContent() << std::endl;
+            }
+            std::cout << std::endl;
+        }
+    }
+private:
+std::vector<User*> users_;
+std::vector<Post*> posts_;
+};
+
+int main() {
+Facebook facebook;
+facebook.CreateUser("Alice", "alice");
+facebook.CreateUser("Bob", "bob");
+
+User* alice = facebook.users_[0];
+User* bob = facebook.users_[1];
+facebook.CreateTextPost(alice, "Hello, Facebook!");
+facebook.CreatePhotoPost(bob, "nbj!", "ffgj");
+
+Post* post = facebook.posts_[0];
+facebook.AddComment(post, bob, "njk!");
+facebook.AddComment(post, alice, "kijikji:))))");
+
+facebook.PrintPosts();
+
+return 0;
+}
