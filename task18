@@ -1,0 +1,93 @@
+//healthcare system
+
+#include <iostream>
+#include <vector>
+#include <string>
+#include <ctime>
+
+using namespace std;
+
+class HealthcareOperation {
+public:
+    virtual void viewMedicalHistory() = 0;
+};
+
+class Appointment {
+public:
+    virtual void scheduleAppointment() = 0;
+};
+
+class InPersonAppointment : public Appointment {
+public:
+    void scheduleAppointment() {
+        cout << "Scheduling an in-person appointment" << endl;
+    }
+};
+
+class VirtualAppointment : public Appointment {
+public:
+    void scheduleAppointment() {
+        cout << "Scheduling a virtual appointment" << endl;
+    }
+};
+
+class Patient : public HealthcareOperation {
+private:
+    string name;
+    string contactInfo;
+public:
+    Patient(string name, string contactInfo) {
+        this->name = name;
+        this->contactInfo = contactInfo;
+    }
+    void viewMedicalHistory() {
+        cout << "Viewing medical history of patient " << name << endl;
+    }
+    void scheduleAppointment(Appointment* appt) {
+        appt->scheduleAppointment();
+    }
+};
+
+class Doctor : public HealthcareOperation {
+private:
+    string name;
+    string contactInfo;
+    string specialty;
+    vector<Appointment*> schedule;
+public:
+    Doctor(string name, string contactInfo, string specialty) {
+        this->name = name;
+        this->contactInfo = contactInfo;
+        this->specialty = specialty;
+    }
+    void viewMedicalHistory(Patient* patient) {
+        patient->viewMedicalHistory();
+    }
+    void addAppointment(Appointment* appt) {
+        schedule.push_back(appt);
+    }
+};
+
+int main() {
+
+    Patient* patient1 = new Patient("Silvard", "98787");
+    Patient* patient2 = new Patient("Loreci Saqo", "7878");
+
+    Doctor* doctor1 = new Doctor("Dr. SpoongBob", "68578", "Family Squearepants");
+    Doctor* doctor2 = new Doctor("Dr. Vardges", "68787", "Cardiology");
+
+    Appointment* inPersonAppt1 = new InPersonAppointment();
+    Appointment* virtualAppt1 = new VirtualAppointment();
+    Appointment* inPersonAppt2 = new InPersonAppointment();
+
+    patient1->scheduleAppointment(inPersonAppt1);
+    patient2->scheduleAppointment(virtualAppt1);
+    patient1->scheduleAppointment(inPersonAppt2);
+
+    doctor1->addAppointment(inPersonAppt1);
+    doctor2->addAppointment(virtualAppt1);
+    doctor2->addAppointment(inPersonAppt2);
+	doctor1->viewMedicalHistory(patient1);
+
+return 0;
+}
