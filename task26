@@ -1,0 +1,147 @@
+#include<iostream>
+#include<vector>
+#include<string>
+//.....
+class Ecommerce {
+public:
+    virtual void browseProducts() = 0;
+    virtual void purchaseProduct(Product p) = 0;
+    virtual void viewPastOrders() = 0;
+    virtual void leaveReview(Product p) = 0;
+};
+
+class Product {
+private:
+    string name;
+    string description;
+    float price;
+    int availability;
+public:
+    
+    Product(string n, string d, float p, int a) {
+        name = n;
+        description = d;
+        price = p;
+        availability = a;
+    }
+    
+    string getName() { return name; }
+    string getDescription() { return description; }
+    float getPrice() { return price; }
+    int getAvailability() { return availability; }
+};
+
+
+class Electronics : public Product {
+private:
+    string brand;
+public:
+    Electronics(string n, string d, float p, int a, string b) : Product(n, d, p, a) {
+        brand = b;
+    }
+    string getBrand() { return brand; }
+};
+
+
+class Clothing : public Product {
+private:
+    string size;
+public:
+
+    Clothing(string n, string d, float p, int a, string s) : Product(n, d, p, a) {
+        size = s;
+    }
+    string getSize() { return size; }
+};
+
+
+class Customer {
+private:
+    string name;
+    string contactInfo;
+    vector<Order> pastOrders;
+public:
+    Customer(string n, string c) {
+        name = n;
+        contactInfo = c;
+    }
+
+    string getName() { return name; }
+    string getContactInfo() { return contactInfo; }
+    vector<Order> getPastOrders() { return pastOrders; }
+};
+
+class Order {
+private:
+    Customer customer;
+    vector<Product> products;
+    float orderTotal;
+public:
+    Order(Customer c, vector<Product> p, float t) {
+        customer = c;
+        products = p;
+        orderTotal = t;
+    }
+    Customer getCustomer() { return customer; }
+    vector<Product> getProducts() { return products; }
+    float getOrderTotal() { return orderTotal; }
+};
+
+class EcommercePlatform : public Ecommerce {
+private:
+    vector<Product> products;
+    vector<Customer> customers;
+    vector<Order> orders;
+public:
+    void addProduct(Product p) {
+        products.push_back(p);
+    }
+   
+    void addCustomer(Customer c) {
+        customers.push_back(c);
+    }
+    
+    void browseProducts() {
+       
+    }
+    void purchaseProduct(Product p) {
+       
+    }
+    
+    void viewPastOrders() {
+}
+
+void leaveReview(Product p) {
+  
+}
+};
+
+
+int main() {
+	EcommercePlatform platform;
+
+	Electronics laptop("Laptop", "High-performance laptop", 1000.0, 10, "Dell");
+	Clothing tshirt("T-shirt", "Cotton T-shirt", 20.0, 50, "M");
+	platform.addProduct(laptop);
+	platform.addProduct(tshirt);
+
+
+	Customer customer1("John", "john");
+	Customer customer2("Jane", "jane");
+	platform.addCustomer(customer1);
+	platform.addCustomer(customer2);
+
+
+platform.browseProducts();
+
+
+platform.purchaseProduct(laptop);
+
+
+platform.viewPastOrders();
+
+
+platform.leaveReview(laptop);
+
+return 0;
+}
