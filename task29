@@ -1,0 +1,137 @@
+#include <iostream>
+#include <vector>
+#include <string>
+
+class User {
+public:
+    User(std::string name, std::string email) : name_(name), email_(email) {}
+    std::string get_name() const { return name_; }
+    std::string get_email() const { return email_; }
+    void add_favorite_recipe(const Recipe& recipe) { favorite_recipes_.push_back(recipe); }
+    void remove_favorite_recipe(const Recipe& recipe) { }
+private:
+    std::string name_;
+    std::string email_;
+    std::vector<Recipe> favorite_recipes_;
+};
+
+class Recipe {
+public:
+    Recipe(std::string title, std::vector<std::string> ingredients, std::string instructions) :
+        title_(title), ingredients_(ingredients), instructions_(instructions) {}
+    std::string get_title() const { return title_; }
+    std::vector<std::string> get_ingredients() const { return ingredients_; }
+    std::string get_instructions() const { return instructions_; }
+    virtual std::string get_type() const = 0; // abstract method for recipe type
+private:
+    std::string title_;
+    std::vector<std::string> ingredients_;
+    std::string instructions_;
+};
+
+class VegetarianRecipe : public Recipe {
+public:
+    VegetarianRecipe(std::string title, std::vector<std::string> ingredients, std::string instructions) :
+        Recipe(title, ingredients, instructions) {}
+    std::string get_type() const override { return "Vegetarian"; }
+};
+
+class DessertRecipe : public Recipe {
+public:
+    DessertRecipe(std::string title, std::vector<std::string> ingredients, std::string instructions) :
+        Recipe(title, ingredients, instructions) {}
+    std::string get_type() const override { return "Dessert"; }
+};
+
+class Rating {
+public:
+    Rating(Recipe recipe, User user, int score) : recipe_(recipe), user_(user), score_(score) {}
+    Recipe get_recipe() const { return recipe_; }
+    User get_user() const { return user_; }
+    int get_score() const { return score_; }
+private:
+    Recipe recipe_;
+    User user_;
+    int score_;
+};
+
+class RecipePlatform {
+public:
+    void add_recipe(const Recipe& recipe) { recipes_.push_back(recipe); }
+    std::vector<Recipe> search_recipes(std::string keyword) {
+        std::vector<Recipe> matching_recipes;
+        for (const auto& recipe : recipes_) {
+            if (recipe.get_title().find(keyword) != std::string::npos ||
+                recipe.get_instructions().find(keyword) != std::string::npos) {
+                matching_recipes.push_back(recipe);
+            }
+        }
+        return matching_recipes;
+    }
+    void rate_recipe(const Recipe& recipe, const User& user, int score) {
+        Rating rating(recipe, user, score);
+        ratings_.push_back(rating);
+    }
+    std::vector<Rating> get_ratings(const Recipe& recipe) {
+        std::vector<Rating> recipe_ratings;
+        for (const auto& rating : ratings_) {
+            if (rating.get_recipe().get_title() == recipe.get_title()) {
+                recipe_ratings.push_back(rating);
+            }
+        }
+        return recipe_ratings;
+    }
+private:
+    std::vector<Recipe> recipes_;
+    std::vector<Rating> ratings_;
+};
+
+
+
+
+
+int main() {
+    
+    User vxGo("VzGo", "vzGo");
+    User gayan("GAyan", "GAyan");
+    User charlie("Charlie", "charlie");
+
+  
+    VegetarianRecipe veggie_pasta("Veggie Pasta", {"pasta", "tomatoes", "spinach", "olive oil"}, "1. Cook pasta. 2. Sauté tomatoes and spinach in olive oil. 3. Toss pasta with tomato and spinach mixture.");
+    DessertRecipe chocolate_cake("Chocolate Cake", {"flour", "sugar", "cocoa powder", "eggs", "milk"}, "1. Mix dry ingredients. 2. Add eggs and milk. 3. Bake.");
+
+    
+    RecipePlatform platform;
+
+    
+    platform.add_recipe(veggie_pasta);
+    platform.add_recipe(chocolate_cake);
+
+    
+    std::vector<Recipe> pasta_recipes = platform.search_recipes("pasta");
+
+    
+    vzGo.add_favorite_recipe(veggie_pasta);
+
+    platform.rate_recipe(chocolate_cake, gayan, 4);
+
+ 
+    std::vector<Rating> cake_ratings = platform.get_ratings(chocolate_cake);
+
+    std::cout << "Pasta recipes:" << std::endl;
+    for (const auto& recipe : pasta_recipes) {
+        std::cout << "- " << recipe.get_title() << std::endl;
+    }
+
+    std::cout << "Alice's favorite recipes:" << std::endl;
+    for (const auto& recipe : vzGo.get_favorite_recipes()) {
+        std::cout << "- " << recipe.get_title() << std::endl;
+    }
+
+    std::cout << "Ratings for chocolate cake:" << std::endl;
+    for (const auto& rating : cake_ratings) {
+        std::cout << "- " << rating.get_user().get_name() << " rated " << rating.get_score() << std::endl;
+    }
+
+    return 0;
+}
