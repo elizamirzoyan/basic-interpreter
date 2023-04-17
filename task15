@@ -1,0 +1,141 @@
+//online shopping platform
+
+#include <iostream>
+#include <vector>
+#include <string>
+using namespace std;
+
+class Product {
+public:
+    string name;
+    double price;
+    string description;
+    vector<pair<string, string>> reviews; // add reviews vector
+    Product(string n, double p, string d)
+        : name(n), price(p), description(d), reviews() {} // initialize reviews vector
+};
+
+
+class Electronics : public Product {
+public:
+    string brand;
+    int warrantyPeriod;
+    Electronics() : Product("", 0.0, ""), brand(""), warrantyPeriod(0) {}
+    Electronics(string n, double p, string d, string b, int w)
+        : Product(n, p, d), brand(b), warrantyPeriod(w) {}
+};
+
+
+class Clothing : public Product {
+public:
+    string size;
+    string color;
+    Clothing() : Product("", 0.0, ""), size(""), color("") {}
+    Clothing(string n, double p, string d, string s, string c)
+        : Product(n, p, d), size(s), color(c) {}
+};
+
+
+class Customer {
+public:
+    string name;
+    string email;
+    string address;
+};
+
+class Order {
+public:
+    Customer customer;
+    vector<Product> products;
+    double totalPrice;
+};
+
+class OnlineShoppingPlatform {
+public:
+    vector<Product> products;
+    vector<Order> orders;
+    void addProduct(Product product) {
+        products.push_back(product);
+    }
+
+    void searchProducts(string query) {
+        cout << "Search results for: " << query << endl;
+        for (int i = 0; i < products.size(); i++) {
+            if (products[i].name.find(query) != string::npos) {
+                cout << i+1 << ". " << products[i].name << " - $" << products[i].price << endl;
+            }
+        }
+    }
+
+    void purchaseProduct(Customer customer, Product product) {
+        Order order;
+        order.customer = customer;
+        order.products.push_back(product);
+        order.totalPrice = product.price;
+        orders.push_back(order);
+        cout << "Thank you for your purchase!" << endl;
+    }
+
+    void viewOrderHistory(Customer customer) {
+        cout << "Order history for " << customer.name << ":" << endl;
+        for (int i = 0; i < orders.size(); i++) {
+            if (orders[i].customer.name == customer.name) {
+                cout << "Order " << i+1 << ":" << endl;
+                for (int j = 0; j < orders[i].products.size(); j++) {
+                    cout << "   " << orders[i].products[j].name << " - $" << orders[i].products[j].price << endl;
+                }
+                cout << "   Total: $" << orders[i].totalPrice << endl;
+            }
+        }
+    }
+
+    void leaveReview(Customer customer, Product product, string review) {
+        for (int i = 0; i < products.size(); i++) {
+            if (products[i].name == product.name) {
+                products[i].reviews.push_back(make_pair(customer.name, review));
+                cout << "Review added!" << endl;
+                return;
+            }
+        }
+        cout << "Product not found." << endl;
+    }
+};
+
+int main() {
+    OnlineShoppingPlatform platform;
+    Electronics phone;
+    phone.name = "iPhone";
+    phone.price = 999.99;
+    phone.description = "The latest and greatest iPhone.";
+    phone.brand = "Apple";
+    phone.warrantyPeriod = 1;
+
+    Clothing shirt;
+    shirt.name = "T-shirt";
+    shirt.price = 19.99;
+    shirt.description = "A comfortable and stylish T-shirt.";
+    shirt.size = "M";
+    shirt.color = "blue";
+
+    platform.addProduct(phone);
+    platform.addProduct(shirt);
+
+
+    platform.searchProducts("iPhone");
+    platform.searchProducts("shirt");
+
+
+    Customer customer;
+    customer.name = "Leyla Saribekyan";
+    customer.email = "lorke";
+    customer.address = "123 Main St.";
+
+    platform.purchaseProduct(customer, phone);
+
+   
+    platform.viewOrderHistory(customer);
+
+    
+    platform.leaveReview(customer, phone, "I love my new iPhone!");
+return 0;
+}
