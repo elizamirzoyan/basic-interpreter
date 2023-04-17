@@ -1,0 +1,99 @@
+//restaurant managment system
+
+#include <iostream>
+#include <vector>
+#include <string>
+
+using namespace std;
+
+class MenuItem {
+public:
+    string name;
+    double price;
+    vector<string> ingredients;
+};
+
+class Appetizer : public MenuItem {
+public:
+    Appetizer() {
+        name = "Mozzarella Sticks";
+        price = 5.99;
+        ingredients = {"Mozzarella cheese", "Breadcrumbs", "Egg", "Flour", "Marinara sauce"};
+    }
+};
+
+class Entree : public MenuItem {
+public:
+    Entree() {
+        name = "Spaghetti and Meatballs";
+        price = 12.99;
+        ingredients = {"Spaghetti", "Meatballs", "Tomato sauce", "Parmesan cheese"};
+    }
+};
+
+class Customer {
+public:
+    string name;
+    string contact_info;
+};
+
+class Order {
+public:
+    Customer customer;
+    vector<MenuItem> items_ordered;
+    double total_price;
+};
+
+class OrderOperations {
+public:
+    virtual void place_order(Order order) = 0;
+    virtual vector<Order> view_order_history(Customer customer) = 0;
+    virtual void leave_review(Order order, MenuItem item, string review) = 0;
+};
+
+class RestaurantManagementSystem : public OrderOperations {
+public:
+    void place_order(Order order) {
+    }
+
+    vector<Order> view_order_history(Customer customer) {
+        return vector<Order>();
+    }
+
+    void leave_review(Order order, MenuItem item, string review) {
+    }
+};
+int main() {
+    Appetizer mozzarella_sticks;
+    Entree spaghetti_and_meatballs;
+
+    Customer john;
+    john.name = "John";
+    john.contact_info = "john";
+
+    Order order;
+    order.customer = john;
+    order.items_ordered.push_back(mozzarella_sticks);
+    order.items_ordered.push_back(spaghetti_and_meatballs);
+    order.total_price = mozzarella_sticks.price + spaghetti_and_meatballs.price;
+
+    RestaurantManagementSystem restaurant;
+    restaurant.place_order(order);
+
+    vector<Order> orders = restaurant.view_order_history(john);
+    for (Order o : orders) {
+        cout << "Customer: " << o.customer.name << endl;
+        cout << "Items ordered: " << endl;
+        for (MenuItem item : o.items_ordered) {
+            cout << "- " << item.name << endl;
+        }
+        cout << "Total price: $" << o.total_price << endl;
+    }
+
+   
+    MenuItem item_to_review = spaghetti_and_meatballs;
+    string review = "This was the best spaghetti I've ever had!";
+    restaurant.leave_review(order, item_to_review, review);
+
+    return 0;
+}
