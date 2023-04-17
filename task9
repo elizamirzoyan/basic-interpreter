@@ -1,0 +1,201 @@
+//real estate system
+
+#include <iostream>
+#include <string>
+#include <vector>
+
+using namespace std;
+
+// Abstract class for real estate operations
+class RealEstateOperation {
+public:
+    virtual void listProperties() = 0;
+    virtual void searchProperties() = 0;
+    virtual void buyProperty() = 0;
+};
+
+// Interface for properties
+class Property {
+public:
+    virtual string getAddress() = 0;
+    virtual double getPrice() = 0;
+    virtual vector<string> getFeatures() = 0;
+};
+
+// Residential property class
+class ResidentialProperty : public Property {
+private:
+    string address;
+    double price;
+    vector<string> features;
+public:
+    ResidentialProperty(string addr, double p, vector<string> feat) {
+        address = addr;
+        price = p;
+        features = feat;
+    }
+    string getAddress() {
+        return address;
+    }
+    double getPrice() {
+        return price;
+    }
+    vector<string> getFeatures() {
+        return features;
+    }
+};
+
+
+class CommercialProperty : public Property {
+private:
+    string address;
+    double price;
+    vector<string> features;
+public:
+    CommercialProperty(string addr, double p, vector<string> feat) {
+        address = addr;
+        price = p;
+        features = feat;
+    }
+    string getAddress() {
+        return address;
+    }
+    double getPrice() {
+        return price;
+    }
+    vector<string> getFeatures() {
+        return features;
+    }
+};
+
+class Agent {
+private:
+    string name;
+    string contactInfo;
+    vector<Property*> properties;
+    vector<string> clients;
+public:
+    Agent(string n, string c) {
+        name = n;
+        contactInfo = c;
+    }
+    string getName() {
+        return name;
+    }
+    string getContactInfo() {
+        return contactInfo;
+    }
+    void addProperty(Property* prop) {
+        properties.push_back(prop);
+    }
+    void removeProperty(Property* prop) {
+        for (int i = 0; i < properties.size(); i++) {
+            if (properties[i] == prop) {
+                properties.erase(properties.begin() + i);
+                break;
+            }
+        }
+    }
+    void addClient(string client) {
+        clients.push_back(client);
+    }
+    void removeClient(string client) {
+        for (int i = 0; i < clients.size(); i++) {
+            if (clients[i] == client) {
+                clients.erase(clients.begin() + i);
+                break;
+            }
+        }
+    }
+};
+
+class Client {
+private:
+    string name;
+    string contactInfo;
+public:
+    Client(string n, string c) {
+        name = n;
+        contactInfo = c;
+    }
+    string getName() {
+        return name;
+    }
+    string getContactInfo() {
+        return contactInfo;
+    }
+};
+
+class RealEstateSystem : public RealEstateOperation {
+private:
+    vector<Agent*> agents;
+    vector<Client*> clients;
+    vector<Property*> properties;
+public:
+    void listProperties() {
+        for (int i = 0; i < properties.size(); i++) {
+            cout << properties[i]->getAddress() << ", " << properties[i]->getPrice() << endl;
+        }
+    }
+    void searchProperties() {
+        // implementation of property search
+    }
+    void buyProperty() {
+        // implementation of property purchase
+    }
+    void addAgent(Agent* agent) {
+        agents.push_back(agent);
+    }
+    void removeAgent(Agent* agent) {
+        for (int i = 0; i    < agents.size(); i++) {
+        if (agents[i] == agent) {
+            agents.erase(agents.begin() + i);
+            break;
+        }
+    }
+}
+void addClient(Client* client) {
+    clients.push_back(client);
+}
+void removeClient(Client* client) {
+    for (int i = 0; i < clients.size(); i++) {
+        if (clients[i] == client) {
+            clients.erase(clients.begin() + i);
+            break;
+        }
+    }
+}
+void addProperty(Property* prop) {
+    properties.push_back(prop);
+}
+void removeProperty(Property* prop) {
+    for (int i = 0; i < properties.size(); i++) {
+        if (properties[i] == prop) {
+            properties.erase(properties.begin() + i);
+            break;
+        }
+    }
+}
+};
+
+int main() {
+  Agent* agent1 = new Agent("Agent 1", "agent1");
+  Agent* agent2 = new Agent("Agent 2", "agent2");
+  Client* client1 = new Client("Client 1", "client1");
+  Client* client2 = new Client("Client 2", "client2");
+  Property* prop1 = new ResidentialProperty("123 Main St.", 1, {"10 bedrooms", "20 bathrooms"});
+  Property* prop2 = new CommercialProperty("456 Market St.", 2, {"3000 sq sm", "1 parking spots"});
+  RealEstateSystem res;
+  res.addAgent(agent1);
+  res.addAgent(agent2);
+  res.addClient(client1);
+  res.addClient(client2);
+  res.addProperty(prop1); 
+  res.addProperty(prop2);
+  agent1->addProperty(prop1);
+  agent2->addProperty(prop2);
+  res.removeClient(client2);
+  res.listProperties();
+
+return 0;
+}
