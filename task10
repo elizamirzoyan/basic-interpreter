@@ -1,0 +1,127 @@
+//social media platform
+#include <iostream>
+#include <vector>
+#include <string>
+#include <ctime>
+
+class SocialMedia {
+public:
+    virtual void createPost() = 0;
+    virtual void viewPost() = 0;
+    virtual void leaveComment() = 0;
+    virtual void manageProfile() = 0;
+};
+
+class TextPost : public SocialMedia {
+public:
+    virtual void createPost() override {
+        std::cout << "Creating a text post..." << std::endl;
+    }
+    
+    virtual void viewPost() override {
+        std::cout << "Viewing a text post..." << std::endl;
+    }
+    
+    virtual void leaveComment() override {
+        std::cout << "Leaving a comment on a text post..." << std::endl;
+    }
+    
+    virtual void manageProfile() override {
+        std::cout << "Managing profile information for a text post..." << std::endl;
+    }
+};
+
+// Interface for image posts
+class ImagePost : public SocialMedia {
+public:
+    virtual void createPost() override {
+        std::cout << "Creating an image post..." << std::endl;
+    }
+    
+    virtual void viewPost() override {
+        std::cout << "Viewing an image post..." << std::endl;
+    }
+    
+    virtual void leaveComment() override {
+        std::cout << "Leaving a comment on an image post..." << std::endl;
+    }
+    
+    virtual void manageProfile() override {
+        std::cout << "Managing profile information for an image post..." << std::endl;
+    }
+};
+class User {
+private:
+    std::string name;
+    std::string contactInfo;
+    
+public:
+    User(std::string name, std::string contactInfo) : name(name), contactInfo(contactInfo) {}
+    
+    std::string getName() const {
+        return name;
+    }
+    
+    std::string getContactInfo() const {
+        return contactInfo;
+    }
+};
+
+class Post {
+private:
+    User user;
+    std::string content;
+    std::time_t postDate;
+    
+public:
+    Post(User user, std::string content) : user(user), content(content) {
+        postDate = std::time(nullptr);
+    }
+    
+    User getUser() const {
+        return user;
+    }
+    
+    std::string getContent() const {
+        return content;
+    }
+    
+    std::time_t getPostDate() const {
+        return postDate;
+    }
+};
+
+
+class Comment {
+private:
+    User user;
+    Post post;
+    std::string content;
+    std::time_t commentDate;
+    
+public:
+    Comment(User user, Post post, std::string content) : user(user), post(post), content(content) {
+        commentDate = std::time(nullptr);
+    }
+    
+    User getUser() const {
+        return user;
+    }
+    
+    Post getPost() const {
+        return post;
+    }
+    
+    std::string getContent() const {
+        return content;
+    }
+    
+    std::time_t getCommentDate() const {
+        return commentDate;
+    }
+};
+
+int main() {
+    User u1;
+    Post p1;
+}
