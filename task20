@@ -1,0 +1,222 @@
+//hotel booking system
+
+#include <iostream>
+#include <vector>
+#include <string>
+#include <ctime>
+
+using namespace std;
+
+class Room {
+protected:
+    int roomNumber;
+    double price;
+    vector<string> amenities;
+public:
+    Room(int roomNumber, double price) {
+        this->roomNumber = roomNumber;
+        this->price = price;
+    }
+    int getRoomNumber() {
+        return roomNumber;
+    }
+    double getPrice() {
+        return price;
+    }
+    vector<string> getAmenities() {
+        return amenities;
+    }
+};
+
+class StandardRoom : public Room {
+public:
+    StandardRoom(int roomNumber) : Room(roomNumber, 100.0) {
+        amenities.push_back("TV");
+        amenities.push_back("WiFi");
+    }
+};
+
+class DeluxeRoom : public Room {
+public:
+    DeluxeRoom(int roomNumber) : Room(roomNumber, 200.0) {
+        amenities.push_back("TV");
+        amenities.push_back("WiFi");
+        amenities.push_back("Mini Bar");
+    }
+};
+
+class Guest {
+protected:
+    string name;
+    string contactInfo;
+public:
+    Guest(string name, string contactInfo) {
+        this->name = name;
+        this->contactInfo = contactInfo;
+    }
+    string getName() {
+        return name;
+    }
+    string getContactInfo() {
+        return contactInfo;
+    }
+};
+
+class Reservation {
+protected:
+    Guest* guest;
+    Room* room;
+    time_t checkInDate;
+    time_t checkOutDate;
+public:
+    Reservation(Guest* guest, Room* room, time_t checkInDate, time_t checkOutDate) {
+        this->guest = guest;
+        this->room = room;
+        this->checkInDate = checkInDate;
+        this->checkOutDate = checkOutDate;
+    }
+    Guest* getGuest() {
+        return guest;
+    }
+    Room* getRoom() {
+        return room;
+    }
+    time_t getCheckInDate() {
+        return checkInDate;
+    }
+    time_t getCheckOutDate() {
+        return checkOutDate;
+    }
+    virtual double getTotalCost() = 0;
+};
+
+class StandardReservation : public Reservation {
+public:
+    StandardReservation(Guest* guest, StandardRoom* room, time_t checkInDate, time_t checkOutDate) : Reservation(guest, room, checkInDate, checkOutDate) {
+    }
+    double getTotalCost() {
+        return difftime(checkOutDate, checkInDate) / (24 * 3600) * room->getPrice();
+    }
+};
+
+class DeluxeReservation : public Reservation {
+public:
+    DeluxeReservation(Guest* guest, DeluxeRoom* room, time_t checkInDate, time_t checkOutDate) : Reservation(guest, room, checkInDate, checkOutDate) {
+    }
+    double getTotalCost() {
+        return difftime(checkOutDate, checkInDate) / (24 * 3600) * room->getPrice();
+    }
+};
+
+class Hotel {
+private:
+    vector<StandardRoom*> standardRooms;
+    vector<DeluxeRoom*> deluxeRooms;
+    vector<Reservation*> reservations;
+public:
+    Hotel(int numStandardRooms, int numDeluxeRooms) {
+        for (int i = 1; i <= numStandardRooms; i++) {
+            standardRooms.push_back(new StandardRoom(i));
+        }
+        for (int i = 1; i <= numDeluxeRooms; i++) {
+            deluxeRooms.push_back(new DeluxeRoom(i));
+        }
+    }
+    ~Hotel() {
+        for (auto& room : standardRooms) {
+            delete room;
+        }
+        for(auto& room : deluxeRooms) {
+delete room;
+}
+for (auto& reservation : reservations) {
+      delete reservation;
+    }
+}
+vector<StandardRoom*> getAvailableStandardRooms(time_t checkInDate, time_t checkOutDate) {
+vector<StandardRoom*> availableRooms;
+for (auto& room : standardRooms) {
+    bool isAvailable = true;
+for (auto& reservation : reservations) {
+    if (reservation->getRoom() == room) {
+        if (checkOutDate > reservation->getCheckInDate() && checkInDate < reservation->getCheckOutDate()) {
+            isAvailable = false;
+                break;
+          }
+      }
+  }
+    if (isAvailable) {
+          availableRooms.push_back(room);
+      }
+  }
+  return availableRooms;
+}
+vector<DeluxeRoom*> getAvailableDeluxeRooms(time_t checkInDate, time_t checkOutDate) {
+    vector<DeluxeRoom*> availableRooms;
+for (auto& room : deluxeRooms) {
+    bool isAvailable = true;
+    for (auto& reservation : reservations) {
+        if (reservation->getRoom() == room) {
+            if (checkOutDate > reservation->getCheckInDate() && checkInDate < reservation->getCheckOutDate()) {
+                isAvailable = false;
+                break;  
+              }
+          }
+      }
+  if (isAvailable) {
+      availableRooms.push_back(room);
+    }
+}
+  return availableRooms;
+}
+void bookStandardRoom(Guest* guest, time_t checkInDate, time_t checkOutDate) {
+      vector<StandardRoom*> availableRooms = getAvailableStandardRooms(checkInDate, checkOutDate);
+      if (availableRooms.size() > 0) {
+          StandardRoom* room = availableRooms[0];
+          reservations.push_back(new StandardReservation(guest, room, checkInDate, checkOutDate));
+          cout << "Room " << room->getRoomNumber() << " has been booked for " << guest->getName() << "." << endl;
+      }
+      else {
+          cout << "Sorry, there are no available standard rooms for the selected dates." << endl;
+      }
+  }
+void bookDeluxeRoom(Guest* guest, time_t checkInDate, time_t checkOutDate) {
+    vector<DeluxeRoom*> availableRooms = getAvailableDeluxeRooms(checkInDate, checkOutDate);
+    if (availableRooms.size() > 0) {
+        DeluxeRoom* room = availableRooms[0];
+        reservations.push_back(new DeluxeReservation(guest, room, checkInDate, checkOutDate));
+        cout << "Room " << room->getRoomNumber() << " has been booked for " << guest->getName() << "." << endl;
+    } 
+    else {
+        cout << "Sorry, there are no available deluxe rooms for the selected dates." << endl;
+     }
+    }
+void printReservationHistory(Guest* guest) {
+    cout << "Reservation history for " << guest->getName() << ":" << endl;
+    for (auto& reservation : reservations) {
+        if (reservation->getGuest() == guest) {
+            cout << "Room " << reservation->getRoom()->getRoomNumber() << ", check-in date: " << ctime(&reservation->getCheckInDate()) << ", check-out date: " << ctime(&reservation->getCheckOutDate()) << ", total cost: $" << reservation->getTotalCost() << endl;
+}
+}
+}
+};
+
+int main() {
+   Hotel hotel(10, 5);
+   Guest guest1("Lady Gaga", "Gaga");
+   time_t checkInDate1= time(0) + 86400; // tomorrow
+  time_t checkOutDate1 = checkInDate1 + 172800; // two days later
+  hotel.bookStandardRoom(&guest1, checkInDate1, checkOutDate1);
+
+  Guest guest2("Madonna", "MAdonna");
+  time_t checkInDate2 = checkOutDate1;
+  time_t checkOutDate2 = checkInDate2 + 259200; // three days later
+  hotel.bookDeluxeRoom(&guest2, checkInDate2, checkOutDate2);
+
+  hotel.printReservationHistory(&guest1);
+  hotel.printReservationHistory(&guest2);
+
+  hotel.cleanup();
+
+return 0;
+}
