@@ -1,0 +1,197 @@
+//movie rental system
+
+#include <iostream>
+#include <vector>
+#include <string>
+#include <chrono>
+
+using namespace std;
+class IMovie {
+public:
+    virtual ~IMovie() {}
+    virtual string getTitle() const = 0;
+    virtual string getGenre() const = 0;
+    virtual string getRating() const = 0;
+    virtual double getRentalCost(int duration) const = 0;
+};
+
+class ComedyMovie : public IMovie {
+public:
+    ComedyMovie(const string& title, const string& rating) 
+        : m_title(title), m_genre("Comedy"), m_rating(rating) {}
+
+    virtual string getTitle() const override {
+        return m_title;
+    }
+
+    virtual string getGenre() const override {
+        return m_genre;
+    }
+
+    virtual string getRating() const override {
+        return m_rating;
+    }
+
+    virtual double getRentalCost(int duration) const override {
+        return duration * 1.5;
+    }
+
+private:
+    string m_title;
+    string m_genre;
+    string m_rating;
+};
+
+class DramaMovie : public IMovie {
+public:
+    DramaMovie(const string& title, const string& rating) 
+        : m_title(title), m_genre("Drama"), m_rating(rating) {}
+
+    virtual string getTitle() const override {
+        return m_title;
+    }
+
+    virtual string getGenre() const override {
+        return m_genre;
+    }
+
+    virtual string getRating() const override {
+        return m_rating;
+    }
+
+    virtual double getRentalCost(int duration) const override {
+        return duration * 2;
+    }
+
+private:
+    string m_title;
+    string m_genre;
+    string m_rating;
+};
+
+// Abstract rental class
+class Rental {
+public:
+    Rental(Customer* customer, IMovie* movie, int duration) 
+        : m_customer(customer), m_movie(movie), m_duration(duration) {}
+
+    virtual ~Rental() {}
+
+    virtual double calculateRentalCost() const {
+        return m_movie->getRentalCost(m_duration);
+    }
+
+    virtual string getDescription() const {
+        return m_movie->getTitle() + " (" + m_movie->getRating() + ")";
+    }
+
+protected:
+    Customer* m_customer;
+    IMovie* m_movie;
+    int m_duration;
+};
+
+// Rental subclass for new releases
+class NewReleaseRental : public Rental {
+public:
+    NewReleaseRental(Customer* customer, IMovie* movie, int duration)
+        : Rental(customer, movie, duration) {}
+
+    virtual double calculateRentalCost() const override {
+        return m_duration * 3;
+    }
+
+    virtual string getDescription() const override {
+        return "New Release: " + Rental::getDescription();
+    }
+};
+
+// Rental subclass for regular movies
+class RegularRental : public Rental {
+public:
+    RegularRental(Customer* customer, IMovie* movie, int duration)
+        : Rental(customer, movie, duration) {}
+
+    virtual double calculateRentalCost() const override {
+        return 2 + (m_duration > 2 ? (m_duration - 2) * 1.5 : 0);
+    }
+
+    virtual string getDescription() const override {
+        return "Regular Rental: " + Rental::getDescription();
+    }
+};
+
+// Interface for customers
+class ICustomer {
+public:
+    virtual ~ICustomer() {}
+    virtual string getName() const = 0;
+    virtual string getContactInfo() const = 0;
+};
+
+// Concrete customer class
+class Customer : public ICustomer {
+public:
+    Customer(const string& name, const string& contactInfo) :
+virtual string getName() const override {
+return m_name;
+}
+virtual string getContactInfo() const override {
+    return m_contactInfo;
+}
+
+void rentMovie(Rental* rental) {
+    m_rentals.push_back(rental);
+}
+
+void returnMovie(Rental* rental) {
+    // Find the rental in the list and remove it
+    auto it = find(m_rentals.begin(), m_rentals.end(), rental);
+    if (it != m_rentals.end()) {
+        m_rentals.erase(it);
+    }
+}
+
+vector<Rental*> getRentalHistory() const {
+    return m_rentals;
+}
+private:
+  string m_name;
+  string m_contactInfo;
+  vector<Rental*> m_rentals;
+};
+
+void printRentalHistory(const Customer& customer) {
+  auto rentals = customer.getRentalHistory();
+  if (rentals.empty()) {
+    cout << "No rental history for " << customer.getName() << endl; 
+    return;
+  }
+  cout << "Rental history for " << customer.getName() << ":" << endl;
+  for (auto rental : rentals) {
+    cout << "  " << rental->getDescription() << " (" << rental->calculateRentalCost() << ")\n";
+  }
+int main() {
+  Customer alice("Alice", "fgff");
+  Customer bob("Bob", "vdfv");
+  ComedyMovie cm1("The Grand Budapest Hotel", "R");
+  ComedyMovie cm2("Zoolander", "PG-13");
+  DramaMovie dm1("The Shawshank Redemption", "R");
+  DramaMovie dm2("The Godfather", "R");
+  auto rental1 = new RegularRental(&alice, &cm1, 2);
+  alice.rentMovie(rental1);
+  auto rental2 = new NewReleaseRental(&bob, &dm1, 3);
+  bob.rentMovie(rental2);
+  auto rental3 = new RegularRental(&bob, &cm2, 3);
+  bob.rentMovie(rental3);
+  printRentalHistory(alice);
+  printRentalHistory(bob);
+  bob.returnMovie(rental2);
+  printRentalHistory(bob);
+
+  delete rental1;
+  delete rental2;
+  delete rental3;
+
+return 0;
+}       
