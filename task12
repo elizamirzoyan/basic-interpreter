@@ -1,0 +1,122 @@
+//car rental system
+
+#include <iostream>
+#include <string>
+#include <vector>
+
+using namespace std;
+class Car {
+public:
+    string make;
+    string model;
+    double rental_price;
+
+    Car(string _make, string _model, double _rental_price) {
+        make = _make;
+        model = _model;
+        rental_price = _rental_price;
+    }
+};
+
+class CarType {
+public:
+virtual string getType() = 0;
+};
+
+class LuxuryCar : public Car, public CarType {
+public:
+LuxuryCar(string _make, string _model, double _rental_price) : Car(_make, _model, _rental_price) {}
+string getType() override {
+    return "Luxury";
+}
+};
+
+class EconomyCar : public Car, public CarType {
+public:
+EconomyCar(string _make, string _model, double _rental_price) : Car(_make, _model, _rental_price) {}
+string getType() override {
+    return "Economy";
+}
+string getType() override {
+    return "Economy";
+}
+};
+
+class Customer {
+public:
+string name;
+string contact_info;
+
+Customer(string _name, string _contact_info) {
+    name = _name;
+    contact_info = _contact_info;
+}
+
+};
+
+
+class Rental {
+public:
+virtual void rentCar(Customer customer, Car* car, int rental_duration) = 0;
+virtual void returnCar() = 0;
+};
+
+class RentalHistory {
+private:
+vector<Rental*> rental_history;
+
+public:
+void addRental(Rental* rental) {
+rental_history.push_back(rental);
+}
+
+Copy code
+void printHistory() {
+    cout << "Rental History:\n";
+    for (Rental* rental : rental_history) {
+        cout << rental << endl;
+    }
+}
+};
+
+class RentalImpl : public Rental {
+private:
+Customer customer;
+Car* car;
+int rental_duration;
+
+public:
+RentalImpl(Customer _customer, Car* _car, int _rental_duration) {
+customer = _customer;
+car = _car;
+rental_duration = _rental_duration;
+}
+
+arduino
+Copy code;
+void rentCar(Customer customer, Car* car, int rental_duration) override {
+    // TODO
+}
+
+void returnCar() override {
+    // TODO
+}
+
+friend ostream& operator<<(ostream& os, const RentalImpl& rental) {
+    os << rental.customer.name << " rented a " << rental.car->getType() << " " << rental.car->make << " " << rental.car->model << " for " << rental.rental_duration << " days";
+    return os;
+}
+};
+
+int main() {
+  Car* car1 = new LuxuryCar("Mercedes-Benz", "S-Class", 300.0);
+  Car* car2 = new EconomyCar("Toyota", "Corolla", 50.0);
+  Customer customer("John Doe", "john");
+  Rental* rental = new RentalImpl(customer, car1, 5);
+  RentalHistory rental_history;
+  rental_history.addRental(rental);
+
+  rental_history.printHistory();
+
+return 0;
+}
