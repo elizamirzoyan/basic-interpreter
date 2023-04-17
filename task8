@@ -1,0 +1,150 @@
+//e-commerce platform
+
+#include <iostream>
+#include <string>
+#include <vector>
+
+using namespace std;
+class Order {
+public:
+    virtual void display() = 0;
+    virtual double getTotalPrice() = 0;
+};
+
+class Product {
+private:
+    string name;
+    double price;
+    string description;
+
+public:
+    Product(string n, double p, string d) {
+        name = n;
+        price = p;
+        description = d;
+    }
+
+    string getName() { return name; }
+    double getPrice() { return price; }
+    string getDescription() { return description; }
+};
+
+class Customer {
+protected:
+    string name;
+    string contactInfo;
+    vector<Order*> orders;
+
+public:
+    Customer(string n, string c) {
+        name = n;
+        contactInfo = c;
+    }
+
+    void addOrder(Order* o) { orders.push_back(o); }
+    void displayOrders() {
+        cout << "Order History for " << name << ":" << endl;
+        for (Order* o : orders) {
+            o->display();
+            cout << endl;
+        }
+    }
+
+    virtual void display() = 0;
+};
+
+
+class ElectronicsProduct : public Product {
+private:
+    string brand;
+
+public:
+    ElectronicsProduct(string n, double p, string d, string b) : Product(n, p, d) {
+        brand = b;
+    }
+
+    string getBrand() { return brand; }
+};
+
+class ClothingProduct : public Product {
+private:
+    string size;
+
+public:
+    ClothingProduct(string n, double p, string d, string s) : Product(n, p, d) {
+        size = s;
+    }
+
+    string getSize() { return size; }
+};
+
+class OnlineOrder : public Order {
+private:
+    Customer* customer;
+    vector<Product*> products;
+    double totalPrice;
+
+public:
+    OnlineOrder(Customer* c, vector<Product*> p) {
+        customer = c;
+        products = p;
+        totalPrice = 0;
+        for (Product* prod : products) {
+            totalPrice += prod->getPrice();
+        }
+    }
+
+    void display() {
+        cout << "Order for " << customer->getName() << ":" << endl;
+        for (Product* p : products) {
+            cout << "   " << p->getName() << " - $" << p->getPrice() << endl;
+        }
+        cout << "Total Price: $" << totalPrice << endl;
+    }
+
+    double getTotalPrice() { return totalPrice; }
+};
+
+class RegularCustomer : public Customer {
+public:
+    RegularCustomer(string n, string c) : Customer(n, c) {}
+
+    void display() {
+        cout << "Regular Customer: " << name << endl;
+        cout << "Contact Info: " << contactInfo << endl;
+    }
+};
+
+class PremiumCustomer : public Customer {
+public:
+    PremiumCustomer(string n, string c) : Customer(n, c) {}
+
+    void display() {
+        cout << "Premium Customer: " << name << endl;
+        cout << "Contact Info: " << contactInfo << endl;
+    }
+};
+
+int main() {  
+  ElectronicsProduct* phone = new ElectronicsProduct("iPhone 13", 999.99, "The latest iPhone from Apple", "Apple");
+  ClothingProduct* shirt = new ClothingProduct("T-shirt", 19.99, "A comfortable cotton T-shirt", "M");
+  ElectronicsProduct* laptop = new ElectronicsProduct("MacBook Pro", 1499.99, "A powerful laptop for professionals", "Apple");
+  RegularCustomer* customer1 = new RegularCustomer("John Smith", "jdfdd");
+  PremiumCustomer* customer2 = new PremiumCustomer("Jane Doe", "fdfdsf");
+  customer1->display();
+  cout << endl;
+  customer2->display();
+  cout << endl;
+  vector<Product*> order1Products = {phone, shirt};
+  OnlineOrder* order1 = new OnlineOrder(customer1, order1Products);
+  customer1->addOrder(order1);
+  vector<Product*> order2Products = {laptop};
+  OnlineOrder* order2 = new OnlineOrder(customer2, order2Products);
+  customer2->addOrder(order2);
+  customer1->displayOrders();
+  cout << endl;
+  customer2->displayOrders();
+  cout << endl;
+
+return 0;
+}
