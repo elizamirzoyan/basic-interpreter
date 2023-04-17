@@ -1,0 +1,128 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <ctime>
+
+using namespace std;
+
+class Game {
+protected:
+    string title;
+    string genre;
+    time_t release_date;
+
+public:
+    Game(string t, string g, time_t rd) : title(t), genre(g), release_date(rd) {}
+    virtual ~Game() {}
+
+    virtual void play() = 0;
+};
+
+
+class ActionGame : public Game {
+public:
+    ActionGame(string t, time_t rd) : Game(t, "Action", rd) {}
+
+    void play() override {
+        cout << "Playing " << title << ", an action game!" << endl;
+    }
+};
+
+class StrategyGame : public Game {
+public:
+    StrategyGame(string t, time_t rd) : Game(t, "Strategy", rd) {}
+
+    void play() override {
+        cout << "Playing " << title << ", a strategy game!" << endl;
+    }
+};
+
+class Developer {
+private:
+    string name;
+    string contact_info;
+    vector<Game*> games;
+
+public:
+    Developer(string n, string ci) : name(n), contact_info(ci) {}
+
+    void add_game(Game* g) {
+        games.push_back(g);
+    }
+
+    void remove_game(Game* g) {
+        for (auto it = games.begin(); it != games.end(); it++) {
+            if (*it == g) {
+                games.erase(it);
+                break;
+            }
+        }
+    }
+
+    void list_games() {
+        cout << "Games developed by " << name << ":" << endl;
+        for (auto g : games) {
+            cout << "- " << g->title << " (" << g->genre << ")" << endl;
+        }
+    }
+};
+
+
+class Publisher {
+private:
+    string name;
+    string contact_info;
+    vector<Game*> games;
+
+public:
+    Publisher(string n, string ci) : name(n), contact_info(ci) {}
+
+    void add_game(Game* g) {
+        games.push_back(g);
+    }
+
+    void remove_game(Game* g) {
+        for (auto it = games.begin(); it != games.end(); it++) {
+            if (*it == g) {
+                games.erase(it);
+                break;
+            }
+        }
+    }
+
+    void list_games() {
+        cout << "Games published by " << name << ":" << endl;
+        for (auto g : games) {
+            cout << "- " << g->title << " (" << g->genre << ")" << endl;
+        }
+    }
+
+    void release_game(Game* g) {
+        cout << "Game " << g->title << " released by " << name << " on " << ctime(&g->release_date);
+    }
+};
+
+int main() {
+    Developer dev1("John", "john");
+    Developer dev2("Jane", "jan");
+    ActionGame game1("Super Mario Bros.", time(nullptr));
+    StrategyGame game2("Civilization", time(nullptr));
+    StrategyGame game3("Starcraft", time(nullptr));
+    dev1.add_game(&game1);
+    dev2.add_game(&game2);
+    dev2.add_game(&game3);
+    dev1.list_games();
+    dev2.list_games();
+    Publisher pub1("Nintendo", "c");
+    Publisher pub2("Blizzard", "conta");
+    
+  pub1.add_game(&game1);
+  pub2.add_game(&game2);  
+  pub2.add_game(&game3);
+  pub1.list_games();  
+  pub2.list_games();
+  pub1.release_game(&game1);
+  game2.play();
+
+return 0;
+}
