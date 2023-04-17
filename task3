@@ -1,0 +1,121 @@
+//restaurant ordering system
+#include <iostream>
+#include <vector>
+#include <string>
+
+using namespace std;
+
+class Dish {
+public:
+    string name;
+    double price;
+    virtual void display() const = 0;
+};
+
+class Appetizer : public Dish {
+public:
+    std::string name;
+    double price;
+
+    Appetizer(const std::string& name_, double price_)
+        : name(name_), price(price_)
+    {}
+
+    void display() const override {
+        cout << "Appetizer: " << name << ", Price: $" << price << endl;
+    }
+};
+class Entree : public Dish {
+public:
+    std::string name;
+    double price;
+
+    Entree(const std::string& name_, double price_)
+        : name(name_), price(price_)
+    {}
+
+    void display() const override {
+        cout << "Entree: " << name << ", Price: $" << price << endl;
+    }
+};
+
+
+class Menu {
+public:
+    vector<Appetizer> appetizers;
+    vector<Entree> entrees;
+
+    void display() const {
+        cout << "Appetizers:" << endl;
+        for (const auto& a : appetizers) {
+            a.display();
+        }
+        cout << "Entrees:" << endl;
+        for (const auto& e : entrees) {
+            e.display();
+        }
+    }
+};
+
+class Customer {
+public:
+    string name;
+    string contact_info;
+
+    void display() const {
+        cout << "Name: " << name << ", Contact Info: " << contact_info << endl;
+    }
+};
+
+class Order {
+public:
+    Customer customer;
+    vector<const Dish*> dishes;
+    double total_price;
+
+    void display() const {
+        customer.display();
+        cout << "Order:" << endl;
+        for (const auto& d : dishes) {
+            d->display();
+        }
+        cout << "Total Price: $" << total_price << endl;
+    }
+};
+
+int main() {
+    // Creating menu
+    Menu menu;
+    Appetizer a1 {"Stalichni", 0.99};
+	Appetizer a3 {"kareyski", 0.99};
+    Appetizer a2 {"Tabule", 0.99};
+    menu.appetizers = {a1, a2, a3};
+    Entree e1 {"Steak", 0.99};
+    Entree e2 {"Fish", 0.99};
+	Entree e3 {"BBQ", 0.99};
+    menu.entrees = {e1, e2, e3};
+
+    // Display menu
+    menu.display();
+
+    // Creating customers
+    Customer c1 {"Hilery Clinton", "54545"};
+	Customer c2 {"Barac Obama", "52152"};
+    // Creating orders
+    Order o1;
+    o1.customer = c1;
+    o1.dishes.push_back(&a1);
+    o1.dishes.push_back(&e1);
+    o1.total_price = a1.price + e1.price;
+
+	Order o2;
+    o2.customer = c2;
+    o2.dishes.push_back(&a2);
+    o2.dishes.push_back(&e3);
+    o2.total_price = a2.price + e3.price;
+    // Display orders
+    o1.display();
+	o2.display();
+
+    return 0;
+}
