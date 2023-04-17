@@ -1,0 +1,143 @@
+// video game system
+
+#include <iostream>
+#include <vector>
+#include <string>
+
+using namespace std;
+
+
+class GamingOperations {
+public:
+    virtual void playGame() = 0;
+    virtual void saveGameProgress() = 0;
+    virtual void competeWithOtherPlayers() = 0;
+};
+
+
+class Game : public GamingOperations {
+protected:
+    string title;
+    string genre;
+    string releaseDate;
+public:
+    Game(string title, string genre, string releaseDate) {
+        this->title = title;
+        this->genre = genre;
+        this->releaseDate = releaseDate;
+    }
+
+    void playGame() override {
+        cout << "Playing " << title << endl;
+    }
+
+    void saveGameProgress() override {
+        cout << "Saving progress for " << title << endl;
+    }
+
+    void competeWithOtherPlayers() override {
+        cout << "Competing with other players in " << title << endl;
+    }
+
+    string getTitle() {
+        return title;
+    }
+
+    string getGenre() {
+        return genre;
+    }
+
+    string getReleaseDate() {
+        return releaseDate;
+    }
+};
+
+class Player {
+protected:
+    string name;
+    string contactInformation;
+public:
+    Player(string name, string contactInformation) {
+        this->name = name;
+        this->contactInformation = contactInformation;
+    }
+
+    string getName() {
+        return name;
+    }
+
+    string getContactInformation() {
+        return contactInformation;
+    }
+};
+
+class Console {
+protected:
+    string consoleType;
+    vector<Game*> installedGames;
+public:
+    Console(string consoleType) {
+        this->consoleType = consoleType;
+    }
+
+    void installGame(Game* game) {
+        installedGames.push_back(game);
+    }
+
+    void playGame(string gameTitle) {
+        for (auto game : installedGames) {
+            if (game->getTitle() == gameTitle) {
+                game->playGame();
+                break;
+            }
+        }
+    }
+
+    void saveGameProgress(string gameTitle) {
+        for (auto game : installedGames) {
+            if (game->getTitle() == gameTitle) {
+                game->saveGameProgress();
+                break;
+            }
+        }
+    }
+
+    void competeWithOtherPlayers(string gameTitle) {
+        for (auto game : installedGames) {
+            if (game->getTitle() == gameTitle) {
+                game->competeWithOtherPlayers();
+                break;
+            }
+        }
+    }
+};
+class SportsGame : public Game {
+public:
+    SportsGame(string title, string releaseDate) : Game(title, "Sports", releaseDate) {}
+};
+
+
+class AdventureGame : public Game {
+public:
+    AdventureGame(string title, string releaseDate) : Game(title, "Adventure", releaseDate) {}
+};
+
+int main() {
+    Game* game1 = new SportsGame("World Cap", "45454");
+    Game* game2 = new AdventureGame("fvfdv", "9654");
+
+    Player player1("vzGo", "vzGo");
+    Player player2("GAyan", "gayan");
+
+    Console console("dfdf");
+
+    console.installGame(game1);
+    console.installGame(game2);
+    console.playGame("fdsfdfd");
+
+    console.saveGameProgress("efedf");
+
+	console.competeWithOtherPlayers("World Cup");
+
+return 0;
+}
