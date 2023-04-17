@@ -1,0 +1,122 @@
+//School managment
+
+#include <iostream>
+#include <vector>
+using namespace std;
+
+
+class School {
+public:
+    virtual void enroll(Student* student, Course* course) = 0;
+    virtual void viewProgress(Student* student) = 0;
+    virtual void manageCourse(Teacher* teacher, Course* course) = 0;
+};
+
+class Person {
+private:
+    string name;
+    string contactInfo;
+public:
+    Person(string name, string contactInfo) {
+        this->name = name;
+        this->contactInfo = contactInfo;
+    }
+};
+
+class Student : public Person {
+public:
+    Student(string name, string contactInfo) : Person(name, contactInfo) {}
+};
+
+
+class Teacher : public Person {
+private:
+    string subjectTaught;
+public:
+    Teacher(string name, string contactInfo, string subjectTaught) : Person(name, contactInfo) {
+        this->subjectTaught = subjectTaught;
+    }
+    string getSubjectTaught() {
+        return subjectTaught;
+    }
+};
+
+
+class Course {
+protected:
+    string courseName;
+    Teacher* teacher;
+    vector<Student*> enrolledStudents;
+public:
+    Course(string courseName, Teacher* teacher) {
+        this->courseName = courseName;
+        this->teacher = teacher;
+    }
+    void enrollStudent(Student* student) {
+        enrolledStudents.push_back(student);
+    }
+    virtual void viewProgress(Student* student) = 0;
+    Teacher* getTeacher() {
+        return teacher;
+    }
+    string getCourseName() {
+        return courseName;
+    }
+};
+
+class MathCourse : public Course {
+public:
+    MathCourse(string courseName, Teacher* teacher) : Course(courseName, teacher) {}
+    void viewProgress(Student* student) {
+        cout << "Math progress for " << student->name << endl;
+    }
+};
+
+
+class EnglishCourse : public Course {
+public:
+    EnglishCourse(string courseName, Teacher* teacher) : Course(courseName, teacher) {}
+    void viewProgress(Student* student) {
+        cout << "English progress for " << student->name << endl;
+    }
+};
+
+class SchoolManagementSystem : public School {
+private:
+    vector<Course*> courses;
+public:
+    void enroll(Student* student, Course* course) {
+        course->enrollStudent(student);
+    }
+    void viewProgress(Student* student) {
+        cout << "Progress for " << student->name << endl;
+        for (Course* course : courses) {
+            course->viewProgress(student);
+        }
+    }
+    void manageCourse(Teacher* teacher, Course* course) {
+        if (teacher == course->getTeacher()) {
+        }
+    }
+    void addCourse(Course* course) {
+        courses.push_back(course);
+    }
+};
+
+
+int main() {
+    Teacher* mathTeacher = new Teacher("John Doe", "john", "Math");
+    Teacher* englishTeacher = new Teacher("Jane Doe", "jane", "English");
+    Student* student1 = new Student("Alice", "alice");
+    Student* student2 = new Student("Bob", "bob");
+    MathCourse* mathCourse = new MathCourse("Algebra", mathTeacher);
+    EnglishCourse* englishCourse = new EnglishCourse("Grammar", englishTeacher);
+    SchoolManagementSystem*school = new SchoolManagementSystem();
+    school->addCourse(mathCourse);
+    school->addCourse(englishCourse);
+    school->enroll(student1, mathCourse);
+    school->enroll(student2, englishCourse);
+    school->viewProgress(student1);
+    school->viewProgress(student2);
+return 0;
+}
