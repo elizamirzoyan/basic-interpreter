@@ -1,0 +1,153 @@
+// university course  managment system#
+
+#include <iostream>
+#include <vector>
+#include <string>
+
+using namespace std;
+
+// Abstract class for course assignments
+class Assignment {
+public:
+    virtual void submitAssignment() = 0;
+};
+
+// Interface for different types of courses
+class Course {
+public:
+    virtual string getType() = 0;
+    virtual void displayCourseInfo() = 0;
+    virtual void addAssignment(Assignment* assignment) = 0;
+};
+
+// Undergraduate course class
+class UndergradCourse : public Course {
+private:
+    string name;
+    string instructor;
+    string content;
+    vector<Assignment*> assignments;
+public:
+    UndergradCourse(string name, string instructor, string content) {
+        this->name = name;
+        this->instructor = instructor;
+        this->content = content;
+    }
+    string getType() {
+        return "Undergraduate";
+    }
+    void displayCourseInfo() {
+        cout << "Course Name: " << name << endl;
+        cout << "Instructor: " << instructor << endl;
+        cout << "Content: " << content << endl;
+    }
+    void addAssignment(Assignment* assignment) {
+        assignments.push_back(assignment);
+    }
+};
+
+// Graduate course class
+class GradCourse : public Course {
+private:
+    string name;
+    string instructor;
+    string content;
+    vector<Assignment*> assignments;
+public:
+    GradCourse(string name, string instructor, string content) {
+        this->name = name;
+        this->instructor = instructor;
+        this->content = content;
+    }
+    string getType() {
+        return "Graduate";
+    }
+    void displayCourseInfo() {
+        cout << "Course Name: " << name << endl;
+        cout << "Instructor: " << instructor << endl;
+        cout << "Content: " << content << endl;
+    }
+    void addAssignment(Assignment* assignment) {
+        assignments.push_back(assignment);
+    }
+};
+
+// Student class
+class Student {
+private:
+    string name;
+    string contactInfo;
+    vector<Course*> enrolledCourses;
+public:
+    Student(string name, string contactInfo) {
+        this->name = name;
+        this->contactInfo = contactInfo;
+    }
+    void enrollCourse(Course* course) {
+        enrolledCourses.push_back(course);
+        cout << name << " has enrolled in " << course->getType() << " course " << endl;
+    }
+    void viewCourseInfo() {
+        for (Course* course : enrolledCourses) {
+            cout << "------ Course Info ------" << endl;
+            course->displayCourseInfo();
+            cout << "--------------------------" << endl;
+        }
+    }
+    void completeAssignment(Assignment* assignment) {
+        assignment->submitAssignment();
+        cout << name << " has completed an assignment." << endl;
+    }
+};
+
+// Professor class
+class Professor {
+private:
+    string name;
+    string contactInfo;
+public:
+    Professor(string name, string contactInfo) {
+        this->name = name;
+        this->contactInfo = contactInfo;
+    }
+    void createCourse(Course* course) {
+        cout << name << " has created " << course->getType() << " course " << endl;
+    }
+    void addAssignment(Course* course, Assignment* assignment) {
+        course->addAssignment(assignment);
+        cout << "Added a new assignment to " << course->getType() << " course" << endl;
+    }
+};
+
+// Assignment class
+class CourseAssignment : public Assignment {
+public:
+    void submitAssignment() {
+        cout << "Submitting an assignment..." << endl;
+    }
+};
+
+int main() {
+  Professor professor1("dkjdk", "dfdk");
+  Student student1("Eliza Mirzoyan", "dc9d45");
+  UndergradCourse undergradCourse1("Introduction to Computer Science", "Vardan Grigoryan", "Opject Oriented Programming");
+  GradCourse gradCourse1("Artificial Intelligence", "Professor lalayan", "Advanced concepts of artificial intelligence");
+  CourseAssignment assignment1;
+  CourseAssignment assignment2;
+  CourseAssignment assignment3;
+  professor1.createCourse(&undergradCourse1);
+  professor1.addAssignment(&undergradCourse1, &assignment1);
+  professor1.addAssignment(&undergradCourse1, &assignment2);
+  professor1.createCourse(&gradCourse1);
+  professor1.addAssignment(&gradCourse1, &assignment3);
+  student1.enrollCourse(&undergradCourse1);
+  student1.enrollCourse(&gradCourse1);
+  student1.viewCourseInfo();
+  student1.completeAssignment(&assignment1);
+  student1.completeAssignment(&assignment2);
+  student1.completeAssignment(&assignment3);
+
+return 0;
+
+
+}
