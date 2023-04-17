@@ -1,0 +1,160 @@
+//ride-sharing service
+
+#include <iostream>
+#include <vector>
+#include <string>
+#include <ctime>
+#include <cstdlib>
+
+using namespace std;
+
+class Vehicle {
+public:
+    virtual string getType() = 0;
+    virtual double getFarePerKM() = 0;
+};
+
+class Car : public Vehicle {
+public:
+    string getType() override { return "Car"; }
+    double getFarePerKM() override { return 0.5; }
+};
+
+class Motorcycle : public Vehicle {
+public:
+    string getType() override { return "Motorcycle"; }
+    double getFarePerKM() override { return 0.3; }
+};
+
+class RideSharing {
+public:
+    virtual void requestRide() = 0;
+    virtual void acceptRide() = 0;
+    virtual void completeRide() = 0;
+};
+
+class Passenger : public RideSharing {
+private:
+    string name;
+    string contactInfo;
+    int rating;
+public:
+    Passenger(string name, string contactInfo) : name(name), contactInfo(contactInfo), rating(0) {}
+    void requestRide() override;
+    void acceptRide() override {}
+    void completeRide() override {}
+    void rateDriver(int rating);
+    string getName() { return name; }
+    string getContactInfo() { return contactInfo; }
+    int getRating() { return rating; }
+};
+
+void Passenger::requestRide() {
+    cout << name << " is requesting a ride." << endl;
+}
+
+void Passenger::rateDriver(int rating) {
+    this->rating = rating;
+}
+
+class Driver : public RideSharing {
+private:
+    string name;
+    string contactInfo;
+    Vehicle* vehicle;
+    int rating;
+    bool isAvailable;
+public:
+    Driver(string name, string contactInfo, Vehicle* vehicle) : name(name), contactInfo(contactInfo), vehicle(vehicle), rating(0), isAvailable(true) {}
+    void requestRide() override {}
+    void acceptRide() override;
+    void completeRide() override;
+    void ratePassenger(int rating);
+    string getName() { return name; }
+    string getContactInfo() { return contactInfo; }
+    Vehicle* getVehicle() { return vehicle; }
+    int getRating() { return rating; }
+    bool getIsAvailable() { return isAvailable; }
+    void setIsAvailable(bool isAvailable) { this->isAvailable = isAvailable; }
+};
+
+void Driver::acceptRide() {
+    cout << name << " has accepted the ride request." << endl;
+    isAvailable = false;
+}
+
+void Driver::completeRide() {
+    cout << name << " has completed the ride." << endl;
+    isAvailable = true;
+}
+
+void Driver::ratePassenger(int rating) {
+    this->rating = rating;
+}
+
+class Ride {
+private:
+    Driver* driver;
+    Passenger* passenger;
+    string destination;
+    double fare;
+public:
+    Ride(Driver* driver, Passenger* passenger, string destination, double distance) : driver(driver), passenger(passenger), destination(destination), fare(distance * driver->getVehicle()->getFarePerKM()) {}
+    Driver* getDriver() { return driver; }
+    Passenger* getPassenger() { return passenger; }
+    string getDestination() { return destination; }
+    double getFare() { return fare; }
+};
+
+double generateDistance() {
+    return rand() % 10 + 1; 
+}
+int main() {
+	Car car1;
+	Car car2;
+	Motorcycle motorcycle1;
+Driver driver1("vzGp", "7878", &car1);
+Driver driver2("JGayan tota", "545", &car2);
+Driver driver3("sxshdgcdgcy", "57578", &motorcycle1);
+
+Passenger passenger1("Minas Avetisyan", "1");
+Passenger passenger2("Tigran HAmasyan", "2");
+
+vector<Ride> rides;
+passenger1.requestRide();
+driver1.acceptRide();
+
+Ride ride1(&driver1, &passenger1, "Dilijan", generateDistance());
+rides.push_back(ride1);
+
+driver1.completeRide();
+passenger1.rateDriver(5);
+
+passenger2.requestRide();
+driver2.acceptRide();
+Ride ride2(&driver2, &passenger2, "aygedzor", generateDistance());
+rides.push_back(ride2);
+driver2.completeRide();
+passenger2.rateDriver(4);
+for (Ride ride : rides) {
+    cout << "Ride from " << ride.getPassenger()->getName() << " to " << ride.getDestination() << endl;
+    cout << "Driver: " << ride.getDriver()->getName() << " (" << ride.getDriver()->getVehicle()->getType() << ")" << endl;
+    cout << "Passenger: " << ride.getPassenger()->getName() << endl;
+    cout << "Fare: $" << ride.getFare() << endl;
+    cout << endl;
+}
+
+// Print out the details of all drivers and passengers
+cout << "Drivers:" << endl;
+cout << "--------" << endl;
+cout << driver1.getName() << " (" << driver1.getVehicle()->getType() << ") - Rating: " << driver1.getRating() << endl;
+cout << driver2.getName() << " (" << driver2.getVehicle()->getType() << ") - Rating: " << driver2.getRating() << endl;
+cout << driver3.getName() << " (" << driver3.getVehicle()->getType() << ") - Rating: " << driver3.getRating() << endl;
+cout << endl;
+cout << "Passengers:" << endl;
+cout << "-----------" << endl;
+cout << passenger1.getName() << " - Rating: " << passenger1.getRating() << endl;
+cout << passenger2.getName() << " - Rating: " << passenger2.getRating() << endl;
+
+return 0;
+}
